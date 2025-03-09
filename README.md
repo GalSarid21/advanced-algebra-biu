@@ -45,17 +45,17 @@ gsarid@swagh-mobl advanced-algebra-biu %
 ```
 
 6. Optional (if running in IDE): set new created python interpreter as IDE interpreter:
-&ensp;6.1 On VSCode:
-&emsp;&emsp;6.1.1 Open VS Code.
-&emsp;&emsp;6.1.2 Press Ctrl + Shift + P (Cmd + Shift + P on Mac) to open the Command Palette.
-&emsp;&emsp;6.1.3 Search for "Python: Select Interpreter" and select it.
-&emsp;&emsp;6.1.4 Choose the desired Python interpreter from the list (e.g., python3, virtual environment, or a conda environment).
-&ensp;6.2 On PyCharm:
-&emsp;&emsp;6.2.1 Open PyCharm and go to File > Settings (Ctrl + Alt + S on Windows/Linux, Cmd + , on Mac).
-&emsp;&emsp;6.2.2 Navigate to Project: <your_project> > Python Interpreter.
-&emsp;&emsp;6.2.3 Click the gear icon and choose Add Interpreter.
-&emsp;&emsp;6.2.4 Select System Interpreter, Virtualenv, or Conda, and set the correct Python path.
-&emsp;&emsp;6.2.5 Click OK/Apply to save changes.
+&ensp;6.1 On VSCode:<br>
+&emsp;&emsp;6.1.1 Open VS Code.<br>
+&emsp;&emsp;6.1.2 Press Ctrl + Shift + P (Cmd + Shift + P on Mac) to open the Command Palette.<br>
+&emsp;&emsp;6.1.3 Search for "Python: Select Interpreter" and select it.<br>
+&emsp;&emsp;6.1.4 Choose the desired Python interpreter from the list (e.g., python3, virtual environment, or a conda environment).<br>
+&ensp;6.2 On PyCharm:<br>
+&emsp;&emsp;6.2.1 Open PyCharm and go to File > Settings (Ctrl + Alt + S on Windows/Linux, Cmd + , on Mac).<br>
+&emsp;&emsp;6.2.2 Navigate to Project: <your_project> > Python Interpreter.<br>
+&emsp;&emsp;6.2.3 Click the gear icon and choose Add Interpreter.<br>
+&emsp;&emsp;6.2.4 Select System Interpreter, Virtualenv, or Conda, and set the correct Python path.<br>
+&emsp;&emsp;6.2.5 Click OK/Apply to save changes.<br>
 
 7. Pip-install the project packages using `requirements.txt` file:
 ```pip
