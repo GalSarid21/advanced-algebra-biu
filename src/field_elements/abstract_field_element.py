@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
-from typing import TypeVar, Type, Optional, Any
+from typing import TypeVar, Optional, Any
 
-T = TypeVar("T")
+T = TypeVar("T", bound="AbstractFieldElement")
 
 
 class AbstractFieldElement(ABC):
@@ -40,15 +40,14 @@ class AbstractFieldElement(ABC):
         return self._a
 
     def type_check(
-        obj: T,
-        expected_type: Type[T],
+        self,
+        other: Any,
         name: Optional[str] = "variable"
-    ) -> T:
-        if not isinstance(obj, expected_type):
-            expected_str = expected_type.__name__
-            obj_type_str = type(obj).__name__
-            err_msg =\
-                f"Invalid type for {name}: expected {expected_str}, got {obj_type_str}"
+    ) -> None:
+
+        if not isinstance(other, type(self)):
+            err_msg = f"Invalid type for {name}: " \
+                + f"expected {type(self)}, got {type(self).__name__}"
             raise TypeError(err_msg)
 
     def exp_by_squaring(

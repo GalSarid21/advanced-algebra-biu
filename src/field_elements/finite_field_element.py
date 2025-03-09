@@ -81,22 +81,22 @@ class FiniteFieldElement(AbstractFieldElement):
     # Here we're basing our operations on the matrix representation of
     # the element.
     def __add__(self, other: "FiniteFieldElement") -> "FiniteFieldElement":
-        other.type_check(FiniteFieldElement)
+        self.type_check(other)
         result = (self._a_matrix + other.a_matrix) % self._p  
         return FiniteFieldElement(result[0, :], self._p, self._fx)
 
     def __sub__(self, other: "FiniteFieldElement") -> "FiniteFieldElement":
-        other.type_check(FiniteFieldElement)
+        self.type_check(other)
         result = (self._a_matrix - other.a_matrix) % self._p     
         return FiniteFieldElement(result[0, :], self._p, self._fx)
 
     def __mul__(self, other: "FiniteFieldElement") -> "FiniteFieldElement":
-        other.type_check(FiniteFieldElement)
+        self.type_check(other)
         result = (self._a_matrix @ other.a_matrix) % self.p
         return FiniteFieldElement(result[0,:], self._p, self._fx)
 
     def __truediv__(self, other: "FiniteFieldElement") -> "FiniteFieldElement":
-        other.type_check(FiniteFieldElement)
+        self.type_check(other)
         # 'GFp' is a field class of type 'galois'
         GFp = galois.GF(self._p**self._n)
         a_matrix = GFp(self._a_matrix.astype('int'))
