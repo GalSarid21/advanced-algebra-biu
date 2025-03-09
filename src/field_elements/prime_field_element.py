@@ -59,19 +59,19 @@ class PrimeFieldElement(AbstractFieldElement):
     # Defines how basic operations (such addition, subtraction, etc.)
     # of two objects of the class will be performed.
     def __add__(self, other: "PrimeFieldElement") -> "PrimeFieldElement":
-        other.type_check(PrimeFieldElement)
+        self.type_check(other)
         return PrimeFieldElement(self._a + other.a, self._p)
 
     def __sub__(self, other: "PrimeFieldElement") -> "PrimeFieldElement":
-        other.type_check(PrimeFieldElement)
+        self.type_check(other)
         return PrimeFieldElement(self._a - other.a, self._p)          
 
     def __mul__(self, other: "PrimeFieldElement"):
-        other.type_check(PrimeFieldElement)
+        self.type_check(other)
         return PrimeFieldElement(self._a * other.a, self._p)
 
     def __truediv__(self, other: "PrimeFieldElement") -> "PrimeFieldElement":
-        other.type_check(PrimeFieldElement)
+        self.type_check(other)
         return PrimeFieldElement(self._a / other.a, self._p)   
 
     def __pow__(self, exp: int) -> "PrimeFieldElement":
