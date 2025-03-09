@@ -1,8 +1,8 @@
 # Advanced Algebra Final Project
-This repository contains the codebase for the Advanced Algebra course at Bar-Ilan University (2025).
-It implements key mathematical concepts and algorithms related to finite fields, discrete logarithms, and field element operations.
-Central to the project is the Baby-Step Giant-Step (BSGS) algorithm, which efficiently solves the discrete logarithm problem in finite fields using a time-memory tradeoff.
-The `FiniteField` class models finite field extensions over prime fields defined by irreducible polynomials, enabling efficient group embeddings and element operations like addition, multiplication, and inversion.
+This repository contains the codebase for the Advanced Algebra course at Bar-Ilan University (2025).<br>
+It implements key mathematical concepts and algorithms related to finite fields, discrete logarithms, and field element operations.<br>
+Central to the project is the Baby-Step Giant-Step (BSGS) algorithm, which efficiently solves the discrete logarithm problem in finite fields using a time-memory tradeoff.<br>
+The `FiniteField` class models finite field extensions over prime fields defined by irreducible polynomials, enabling efficient group embeddings and element operations like addition, multiplication, and inversion.<br>
 A task manager orchestrates the execution of complex field operations, utilizing abstraction to perform a range of mathematical computations and generate detailed logs for analysis and validation.
 
 ## 📋 Repo Components:
@@ -45,17 +45,17 @@ gsarid@swagh-mobl advanced-algebra-biu %
 ```
 
 6. Optional (if running in IDE): set new created python interpreter as IDE interpreter:
-</pre>6.1 On VSCode:
-</pre></pre>6.1.1 Open VS Code.
-</pre></pre>6.1.2 Press Ctrl + Shift + P (Cmd + Shift + P on Mac) to open the Command Palette.
-</pre></pre>6.1.3 Search for "Python: Select Interpreter" and select it.
-</pre></pre>6.1.4 Choose the desired Python interpreter from the list (e.g., python3, virtual environment, or a conda environment).
-</pre>6.2 On PyCharm:
-</pre></pre>6.2.1 Open PyCharm and go to File > Settings (Ctrl + Alt + S on Windows/Linux, Cmd + , on Mac).
-</pre></pre>6.2.2 Navigate to Project: <your_project> > Python Interpreter.
-</pre></pre>6.2.3 Click the gear icon and choose Add Interpreter.
-</pre></pre>6.2.4 Select System Interpreter, Virtualenv, or Conda, and set the correct Python path.
-</pre></pre>6.2.5 Click OK/Apply to save changes.
+&ensp;6.1 On VSCode:
+&emsp;&emsp;6.1.1 Open VS Code.
+&emsp;&emsp;6.1.2 Press Ctrl + Shift + P (Cmd + Shift + P on Mac) to open the Command Palette.
+&emsp;&emsp;6.1.3 Search for "Python: Select Interpreter" and select it.
+&emsp;&emsp;6.1.4 Choose the desired Python interpreter from the list (e.g., python3, virtual environment, or a conda environment).
+&ensp;6.2 On PyCharm:
+&emsp;&emsp;6.2.1 Open PyCharm and go to File > Settings (Ctrl + Alt + S on Windows/Linux, Cmd + , on Mac).
+&emsp;&emsp;6.2.2 Navigate to Project: <your_project> > Python Interpreter.
+&emsp;&emsp;6.2.3 Click the gear icon and choose Add Interpreter.
+&emsp;&emsp;6.2.4 Select System Interpreter, Virtualenv, or Conda, and set the correct Python path.
+&emsp;&emsp;6.2.5 Click OK/Apply to save changes.
 
 7. Pip-install the project packages using `requirements.txt` file:
 ```pip
