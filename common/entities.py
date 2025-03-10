@@ -33,4 +33,4 @@ class TaskResultStatus(Enum):
 @dataclass
 class TaskResult:
     status: TaskResultStatus
-    error_msg: Optional[str]
+    error_msg: Optional[str] = None
