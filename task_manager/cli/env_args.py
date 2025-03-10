@@ -17,7 +17,7 @@ class CliEnvArgs:
             help="target task to execute.",
             type=str,
             choices=[task.value for task in TaskType],
-            default=TaskType.RUN_ALL
+            default=TaskType.RUN_ALL.value
         )
 
         args = parser.parse_args()

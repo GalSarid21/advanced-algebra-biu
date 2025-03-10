@@ -1,7 +1,7 @@
 # Advanced Algebra Final Project
-This repository contains the codebase for the Advanced Algebra course at Bar-Ilan University (2025).<br>
+This repository contains the codebase for the final project of `Advanced Algebra` course at Bar-Ilan University (2025).<br><br>
 It implements key mathematical concepts and algorithms related to finite fields, discrete logarithms, and field element operations.<br>
-Central to the project is the Baby-Step Giant-Step (BSGS) algorithm, which efficiently solves the discrete logarithm problem in finite fields using a time-memory tradeoff.<br>
+Central to the project is the Baby-Step Giant-Step (BSGS) algorithm, which efficiently solves the discrete logarithm problem in finite fields using a time-memory tradeoff.<br><br>
 The `FiniteField` class models finite field extensions over prime fields defined by irreducible polynomials, enabling efficient group embeddings and element operations like addition, multiplication, and inversion.<br>
 A task manager orchestrates the execution of complex field operations, utilizing abstraction to perform a range of mathematical computations and generate detailed logs for analysis and validation.
 
@@ -9,12 +9,12 @@ A task manager orchestrates the execution of complex field operations, utilizing
 
 | Component         | Description                                                          |
 | ----------------- | -------------------------------------------------------------------- |
-| [field_elements](https://github.com/GalSarid21/advanced-algebra-biu/tree/main/src/field_elements/abstract_field_element.py) | prime and finite field elements implementation |
-| [fields](https://github.com/GalSarid21/advanced-algebra-biu/tree/main/src/fields/finite_field.py) | finite field implementation |
-| [bsgs](https://github.com/GalSarid21/advanced-algebra-biu/tree/main/src/bsgs.py) | a class to perform BSGS algorithm on a finite field element |
-| [task_manager](https://github.com/GalSarid21/advanced-algebra-biu/tree/main/task_manager/task_manager.py) | a runner class for the assignment sections (tasks) |
-| [data](https://github.com/GalSarid21/advanced-algebra-biu/tree/main/data/second_section.yaml) | data for section objects creation |
-| [common](https://github.com/GalSarid21/advanced-algebra-biu/tree/main/common/entities.py) | common logic to share in different project parts |
+| [field_elements](https://github.com/GalSarid21/advanced-algebra-biu/tree/main/src/field_elements/abstract_field_element.py) | Implements prime and finite field elements |
+| [fields](https://github.com/GalSarid21/advanced-algebra-biu/tree/main/src/fields/finite_field.py) | Defines and operates on finite fields |
+| [bsgs](https://github.com/GalSarid21/advanced-algebra-biu/tree/main/src/bsgs.py) | Implements the Baby-Step Giant-Step (BSGS) algorithm for discrete logarithms |
+| [task_manager](https://github.com/GalSarid21/advanced-algebra-biu/tree/main/task_manager/task_manager.py) | Manages and executes structured assignment sections (as tasks) |
+| [data](https://github.com/GalSarid21/advanced-algebra-biu/tree/main/data/second_section.yaml) |Stores configuration and parameters for task execution |
+| [common](https://github.com/GalSarid21/advanced-algebra-biu/tree/main/common/entities.py) | Contains shared utilities and logic used across modules |
 
 ## ⚙️ Set Python Environment:
 1. Make sure you have python version >= 3.10 on your machine:
@@ -40,16 +40,16 @@ source ./venv/bin/activate
 
 * When the `venv` is activated, its name should appear in brackets at the beginning of your terminal prompt. For example:
 ```bash
-gsarid@swagh-mobl advanced-algebra-biu %
-(venv) gsarid@swagh-mobl advanced-algebra-biu %
+saridg@mobl advanced-algebra-biu %
+(venv) saridg@mobl advanced-algebra-biu %
 ```
 
-6. Optional (if running in IDE): set new created python interpreter as IDE interpreter:
+6. Optional (if running in IDE): set new created python interpreter as IDE interpreter:<br>
 &ensp;6.1 On VSCode:<br>
 &emsp;&emsp;6.1.1 Open VS Code.<br>
 &emsp;&emsp;6.1.2 Press Ctrl + Shift + P (Cmd + Shift + P on Mac) to open the Command Palette.<br>
 &emsp;&emsp;6.1.3 Search for "Python: Select Interpreter" and select it.<br>
-&emsp;&emsp;6.1.4 Choose the desired Python interpreter from the list (e.g., python3, virtual environment, or a conda environment).<br>
+&emsp;&emsp;6.1.4 Choose the desired Python interpreter from the list (e.g., python3, venv, or a conda env).<br>
 &ensp;6.2 On PyCharm:<br>
 &emsp;&emsp;6.2.1 Open PyCharm and go to File > Settings (Ctrl + Alt + S on Windows/Linux, Cmd + , on Mac).<br>
 &emsp;&emsp;6.2.2 Navigate to Project: <your_project> > Python Interpreter.<br>
@@ -80,13 +80,13 @@ python main.py --task section-2
 
 ## 📤 Outputs:
 
-1. Task manager creates a log file avaliable in the `logs` directory.
+1. The task manager generates a log file stored in the `logs` directory (created at runtime if not exists).
 
-2. The log file concentrate all the section test results.
+2. The log file consolidates all the section test results.
 
-3. Log file name would be the word `app` with the running date at the `yyyyMMdd` format and a random `uuid` to make sure a new log file is created on each run.
+3. The log filename follows the format `app_yyyyMMdd_uuid.log`, where `yyyyMMdd` represents the run date, and a unique UUID ensures a new file is created for each execution.
 
-4. Log file example (section 2 results):
+4. Example log file (Section 2 results):
 ```bash
 File Name: app_20250309_v6r5W8iARA-W9z-uAqlGgA.log
 Content:
