@@ -1,2 +1,3 @@
 from .second_section_task import SecondSectionTask
+from .third_section_task import ThirdSectionTask
 from .abstract_task import AbstractTask

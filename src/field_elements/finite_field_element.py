@@ -1,9 +1,10 @@
 from src.field_elements import AbstractFieldElement
 from common.entities import PrintMode
+from common.log import LoggingHandler
 from src.fields import FiniteField
 
 from itertools import product
-from typing import List, Union
+from typing import List, Union, Optional
 from copy import deepcopy
 
 import galois
@@ -52,12 +53,17 @@ class FiniteFieldElement(AbstractFieldElement):
         # polynomia degree
         self._n = len(fx) - 1
         # coefficients of a - [a0,a1,...,an-1] (mod p)
-        self._a = (
-            a % self._p if isinstance(a, np.ndarray)
-            else np.array(a) % self._p
-        )
-        self._field = FiniteField(self._p, self._fx)
-        self._a_matrix = self.element_embedding_GLn(self._a)
+        self._a = np.mod(a, self._p)
+        try:
+            # reducible field would raise an error
+            self._field = FiniteField(self._p, self._fx)
+        except Exception as e:
+            # raising a more accurate error
+            raise ValueError(
+                "FiniteFieldElement creation failed due to a field " +
+                f"creation error: {e}"
+            )
+        self._a_matrix = self.element_embedding_GLn(self._a)   
 
     @property
     def fx(self) -> np.ndarray:
@@ -82,17 +88,20 @@ class FiniteFieldElement(AbstractFieldElement):
     # the element.
     def __add__(self, other: "FiniteFieldElement") -> "FiniteFieldElement":
         self.type_check(other)
-        result = (self._a_matrix + other.a_matrix) % self._p  
+        mat_result = self._a_matrix + other.a_matrix
+        result = np.mod(mat_result, self._p) 
         return FiniteFieldElement(result[0, :], self._p, self._fx)
 
     def __sub__(self, other: "FiniteFieldElement") -> "FiniteFieldElement":
         self.type_check(other)
-        result = (self._a_matrix - other.a_matrix) % self._p     
+        mat_result = self._a_matrix - other.a_matrix
+        result = np.mod(mat_result, self._p)   
         return FiniteFieldElement(result[0, :], self._p, self._fx)
 
     def __mul__(self, other: "FiniteFieldElement") -> "FiniteFieldElement":
         self.type_check(other)
-        result = (self._a_matrix @ other.a_matrix) % self.p
+        mat_result = self._a_matrix @ other.a_matrix
+        result = np.mod(mat_result, self._p) 
         return FiniteFieldElement(result[0,:], self._p, self._fx)
 
     def __truediv__(self, other: "FiniteFieldElement") -> "FiniteFieldElement":
@@ -103,9 +112,9 @@ class FiniteFieldElement(AbstractFieldElement):
         try:
             other_inv = np.linalg.inv(GFp(other.a_matrix.astype('int')))
         except:
-            print("Error: Division by zero")
+            LoggingHandler.log_error("Error: Division by zero")
             return other
-        result = (a_matrix @ other_inv)
+        result = a_matrix @ other_inv
         result = result.tolist()
         return FiniteFieldElement(result[0], self._p, self._fx) 
 
@@ -117,24 +126,28 @@ class FiniteFieldElement(AbstractFieldElement):
             try:
                 matrix = np.array(np.linalg.inv(GFp(matrix.astype('int'))))
             except:
-                print('Error: Division by zero')
+                LoggingHandler.log_error('Error: Division by zero')
                 return self
             exp = -exp
-        result = np.linalg.matrix_power(matrix, exp) % self._p
+        mat_power = np.linalg.matrix_power(matrix, exp)
+        result = np.mod(mat_power, self._p)
         return FiniteFieldElement(result[0, :], self._p, self.fx) 
 
     def element_embedding_GLn(self, a: np.ndarray) -> np.ndarray:   
         basis_matrix = self._field.span
-        element = sum(a[:, np.newaxis, np.newaxis] * basis_matrix) % self._p
+        # element-wise multiplication between a (reshaped to align dimensions)
+        # and basis_matrix
+        elements_sum = np.sum(
+            a[:, np.newaxis, np.newaxis] * basis_matrix,
+            axis=0
+        )
+        element = np.mod(elements_sum, self._p)
         return element
 
-    def pretty_print(self, print_mode: PrintMode) -> None:
-        print_msg = f"PrintMode: {print_mode.name} | "
-        if self._a_matrix is None:
-            # TODO: consider raising en error
-            print_msg = "Error: element not in the field"
+    def pretty_print(self, print_mode: PrintMode) -> str:
+        """Creates print message to use in LoggingHandler"""
 
-        elif print_mode is PrintMode.VECTOR:
+        if print_mode is PrintMode.VECTOR:
             print_msg += f"Element = {self._a}"
 
         elif print_mode is PrintMode.POLYNOMIAL:
@@ -146,35 +159,42 @@ class FiniteFieldElement(AbstractFieldElement):
                 .replace(']', '')
             print_msg += f"Element =\n{matrix}"
 
-        print(print_msg)
+        return print_msg
 
     def get_multiplicative_identity(self) -> "FiniteFieldElement":
         """Returns the multiplicative identity element (1) of the finite field."""
         return FiniteFieldElement(np.eye(self._n)[0, :], self._p, self._fx) 
 
-    def mul_order(self) -> int:
+    def mul_order(self) -> Optional[int]:
         """
         Computes the multiplicative order of 'a' in the finite field.
         The multiplicative order of an element a is the smallest positive
         integer k such that a^k=1(mod p).
-        This function iteratively computes a^k by multiplying self._a
-        (representation of the element in the field) until it cycles
-        back to 1.
+        Uses vectorized NumPy computations for performance.
         """
-        if (self._a == np.zeros((self._n, 1))).all():
-            # TODO: consider throwing an error
-            # raise ValueError("Error: a is zero, not in the prime field")
-            print("Error: a is zero, not in the prime field")
+        if np.all(self._a == 0):
+            LoggingHandler.log_error(
+                "Error: a is zero, not in the prime field"
+            )
             return
-        else:
-            pow = 1
-            result = deepcopy(self)
 
-            while (result._a != np.eye(self._n)[0, :]).any():
-                result = result*self
-                pow += 1
+        # generate power sequence (self._a^k mod p) for k = 1, 2, ..., p-1
+        max_k = self._p - 1
+        mat_power = np.linalg.matrix_power(
+            self._a,
+            np.arange(1, max_k + 1)[:, None, None]
+        )
+        powers = np.mod(mat_power, self._p)
 
-            return pow
+        # finds the first k where a^k = I (identity matrix)
+        identity = np.eye(self._n, dtype=int)
+        orders = np.where(np.all(powers == identity, axis=(1, 2)))[0]
+
+        return (
+            (orders[0] + 1)
+            if orders.size > 0
+            else None
+        )
 
     def generator(self) -> Union["FiniteFieldElement", None]:
         """

@@ -1,9 +1,9 @@
 from src.field_elements import AbstractFieldElement
+from common.log import LoggingHandler
 
-from typing import Union
+from typing import Union, Optional
 from copy import deepcopy
 
-import logging
 import galois
 
 
@@ -80,19 +80,22 @@ class PrimeFieldElement(AbstractFieldElement):
         # function.
         if self._a == 0:
             # in the multiplicative group zero element doesn't exist
-            logging.error("Error! 'a' does not have an inverse in 'k' field")
+            LoggingHandler.log_error(
+                "Error! 'a' does not have an inverse in 'k' field"
+            )
             return self
         if exp != -1:
-            raise ValueError(
+            LoggingHandler.log_error(
                 "'**' operator is using for inversion only, 'exp' must be -1!"
             )
+            return self
         return PrimeFieldElement(self._a**exp, self._p)
 
     def get_multiplicative_identity(self) -> "PrimeFieldElement":
         """Returns the multiplicative identity element (1) of the prime field."""
         return PrimeFieldElement(1, self._p)
 
-    def mul_order(self) -> int:
+    def mul_order(self) -> Optional[int]:
         """
         Computes the multiplicative order of 'a' in the prime field.
         The multiplicative order of an element a is the smallest positive
@@ -102,13 +105,19 @@ class PrimeFieldElement(AbstractFieldElement):
         back to 1.
         """
         if self._a == 0:
-            # TODO: consider throwing an error
-            # raise ValueError("Error: a is zero, not in the prime field")
-            print("Error: a is zero, not in the prime field")
+            LoggingHandler.log_error(
+                "Error: a is zero, not in the prime field"
+            )
             return
         else:
             pow = 1
-            result = deepcopy(self._a)
+            # self._a can be int or galois.FieldArray.
+            # if its a galois.FieldArray, a deepcopy is needed to 
+            # avoid changing self._a while searching the mul_order
+            result = (
+                self._a if isinstance(self._a, int)
+                else deepcopy(self._a)
+            )
 
             while result != 1:
                 result = result*self._a

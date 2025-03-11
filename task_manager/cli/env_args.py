@@ -1,8 +1,8 @@
 from common.entities import TaskType
+from common.log import LoggingHandler
 
 from argparse import ArgumentParser, Namespace
 
-import logging
 import json
 
 
@@ -21,8 +21,8 @@ class CliEnvArgs:
         )
 
         args = parser.parse_args()
-        logging.info(
-            f"{'='*40} Environment Setup {'='*40}" + "\n" +
+        LoggingHandler.log_info(
+            f"{'='*48} Environment Setup {'='*48}" + "\n" +
             "Environment Variables:\n" +
             json.dumps(vars(args), indent=4)
         )
