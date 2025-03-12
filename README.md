@@ -5,6 +5,7 @@ Central to the project is the Baby-Step Giant-Step (BSGS) algorithm, which effic
 The `FiniteField` class models finite field extensions over prime fields defined by irreducible polynomials, enabling efficient group embeddings and element operations like addition, multiplication, and inversion.<br>
 A task manager orchestrates the execution of complex field operations, utilizing abstraction to perform a range of mathematical computations and generate detailed logs for analysis and validation.
 
+
 ## 📋 Repo Components:
 
 | Component         | Description                                                          |
@@ -15,6 +16,7 @@ A task manager orchestrates the execution of complex field operations, utilizing
 | [task_manager](https://github.com/GalSarid21/advanced-algebra-biu/tree/main/task_manager/task_manager.py) | Manages and executes structured assignment sections (as tasks) |
 | [data](https://github.com/GalSarid21/advanced-algebra-biu/tree/main/data/second_section.yaml) |Stores configuration and parameters for task execution |
 | [common](https://github.com/GalSarid21/advanced-algebra-biu/tree/main/common/entities.py) | Contains shared utilities and logic used across modules |
+
 
 ## ⚙️ Set Python Environment:
 1. Make sure you have python version >= 3.10 on your machine:
@@ -62,7 +64,8 @@ saridg@mobl advanced-algebra-biu %
 pip install -r requirements.txt
 ```
 
-## 🏃 Running Assignment Sections (Tasks):
+
+## 🏃 Running Assignment Sections (Tasks) Locally:
 
 1. Running the project is possible using a simple cli command:
 ```python
@@ -77,6 +80,39 @@ python main.py --task section-2
     run-all: run all the implemented sections.
 ]
 ```
+
+
+## 🐳 Running Assignment Sections (Tasks) With Docker Container:
+1. Make sure you have a docker installation on your machine:
+```bash
+docker --version
+```
+
+* If Docker is not installed or outdated, download the latest version from docker.com (windows) or run brew install --cask docker on terminal (mac).
+
+2. Pull public image:
+```bash
+docker pull saridga/biu:advanced-algebra
+```
+
+* You can tag it with a shorter name for convenience:
+```bash
+docker tag saridga/biu:advanced-algebra advanced-algebra:latest
+```
+
+3. Set local directory for output log files:
+```bash
+export LOG_DIR=/path/to/local/folder
+```
+
+4. Run a container using the pulled image and `LOG_DIR`:
+```bash
+docker run --rm -v ${LOG_DIR}:/app/logs -e TASK=run-all advanced-algebra
+```
+
+* You can target any specific task you want using the docker environment variable `TASK`.<br>
+* After the running is done, container suppose to be deleted and the `LOG_DIR` suppose to have a new log file.
+
 
 ## 📤 Outputs:
 
