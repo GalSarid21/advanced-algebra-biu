@@ -1,8 +1,10 @@
 from task_manager.tasks import(
     AbstractTask,
-    SecondSectionTask
+    SecondSectionTask,
+    ThirdSectionTask
 )
 from common.entities import TaskType, TaskResult, TaskResultStatus
+from common.log import LoggingHandler
 
 from argparse import Namespace
 from typing import List
@@ -10,7 +12,6 @@ from typing import List
 import importlib
 import inspect
 import pkgutil
-import logging
 
 
 class TaskManager:
@@ -35,6 +36,9 @@ class TaskManager:
         elif task_type == TaskType.SECTION_2:
             return [SecondSectionTask()]
 
+        elif task_type == TaskType.SECTION_3:
+            return [ThirdSectionTask()]
+
     def _load_task_classes(self) -> List[AbstractTask]:
         """Dynamically loads all concrete Task classes from the tasks folder."""
         task_classes = []
@@ -42,8 +46,8 @@ class TaskManager:
 
         for _, module_name, _ in pkgutil.iter_modules([f"./{package.replace('.', '/')}"]):
             module = importlib.import_module(f"{package}.{module_name}")
-            for name, obj in inspect.getmembers(module, inspect.isclass):
-                if issubclass(obj, AbstractTask) and obj is not AbstractTask and not name.lower().startswith("abstract_"):
+            for _, obj in inspect.getmembers(module, inspect.isclass):
+                if issubclass(obj, AbstractTask) and obj is not AbstractTask:
                     task_classes.append(obj())
 
         return task_classes
@@ -51,7 +55,7 @@ class TaskManager:
     def _handle_unsuccessful_task(self, result: TaskResult) -> None:
 
         if result.status == TaskResultStatus.ERROR:
-            logging.error(result.error_msg)
+            LoggingHandler.log_error(result.error_msg)
 
         else:
             raise TypeError("Got unrecognized TaskResultStatus")

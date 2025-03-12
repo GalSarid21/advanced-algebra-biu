@@ -1,3 +1,5 @@
+from common.consts import Consts
+
 from typing import List
 
 import numpy as np
@@ -36,29 +38,30 @@ class FiniteField:
     @property
     def p(self) -> int:
         return self._p
-    
+
     @property
     def fx(self) -> List[int]:
         return self._fx
-    
+
     @property
     def n(self) -> int:
         return self._n
-    
+
     @property
     def span(self) -> np.ndarray:
         return self._span
 
     def _validate_irreducible(self) -> None:
         """Checks that f(x) is indeed irreducible (only for degrees 2/3)"""
-        if self._n in [2,3]:
-            for i in range(self.p):
-              root = np.polyval(self.fx[::-1],i) % self._p 
+        if self._n in Consts.REDUCIBLE_DEGREES:
+            for i in range(self._p):
+              root = np.polyval(self._fx[::-1], i) % self._p 
               if root == 0:
-                  # TODO: consider raise an exception instead of pirnt error
-                  # raise ValueError(f"fx is reducible, the root is {i}")
-                  print(f"fx is reducible, the root is {i}")
-                  break
+                  raise ValueError(
+                      "fx is reducible! " +
+                      f"p: {self._p}, fx: {self._fx}, " +
+                      f"degree: {self._n}, root: {i}"
+                    )
 
     def embedding_GLn(self):
         """

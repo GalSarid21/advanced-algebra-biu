@@ -23,14 +23,6 @@ class AbstractFieldElement(ABC):
         # a is created at the object
         self._a = None
 
-    def __new__(cls, *args, **kwargs):
-        if cls is AbstractFieldElement:
-            # make sure the abstract class can't be instantiate
-            raise TypeError(
-                f"Cannot instantiate abstract class {cls.__name__}"
-            )
-        return super().__new__(cls)
-
     @property
     def p(self) -> int:
         return self._p

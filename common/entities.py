@@ -23,6 +23,7 @@ class PrintMode(Enum):
 class TaskType(Enum):
     RUN_ALL = "run-all"
     SECTION_2 = "section-2"
+    SECTION_3 = "section-3"
 
 
 class TaskResultStatus(Enum):
