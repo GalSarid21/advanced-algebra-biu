@@ -111,7 +111,7 @@ docker run --rm -v ${LOG_DIR}:/app/logs -e TASK=run-all advanced-algebra
 ```
 
 * You can target any specific task you want using the docker environment variable `TASK`.<br>
-* After the running is done, container suppose to be deleted and the `LOG_DIR` suppose to have a new log file.
+* Once the process run completes, the container should be removed, and `LOG_DIR` should contain a new log file.
 
 
 ## 📤 Outputs:
