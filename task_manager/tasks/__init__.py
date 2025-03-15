@@ -1,3 +1,12 @@
-from .second_section_task import SecondSectionTask
-from .third_section_task import ThirdSectionTask
-from .abstract_task import AbstractTask
+from .second_section import SecondSectionTask
+from .third_section import ThirdSectionTask
+from .fourth_section import FourthSectionTask
+from .fifth_section import FifthSectionTask
+from .abstract import AbstractTask
+
+ALL_TASKS = [
+    SecondSectionTask,
+    ThirdSectionTask,
+    FourthSectionTask,
+    FifthSectionTask
+]

@@ -58,9 +58,7 @@ class FiniteField:
               root = np.polyval(self._fx[::-1], i) % self._p 
               if root == 0:
                   raise ValueError(
-                      "fx is reducible! " +
-                      f"p: {self._p}, fx: {self._fx}, " +
-                      f"degree: {self._n}, root: {i}"
+                      f"fx is reducible! degree: {self._n}, root: {i}"
                     )
 
     def embedding_GLn(self):

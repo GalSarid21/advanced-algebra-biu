@@ -10,9 +10,10 @@ class Consts:
         PairMathOperator.SUB: operator.sub,
         PairMathOperator.MUL: operator.mul,
         PairMathOperator.DIV: operator.truediv,
+        PairMathOperator.EQ: operator.eq
     }
 
-    SINGLE_OP_MAP = {SingleMathOperator.INV: operator.pow}
+    SINGLE_OP_MAP = {SingleMathOperator.INV: operator.invert}
     SINGLE_OP_CONST_MAP = {SingleMathOperator.INV:-1}
 
     OP_SYMBOL_MAP = {
@@ -20,7 +21,8 @@ class Consts:
         PairMathOperator.SUB: "-",
         PairMathOperator.MUL: "*",
         PairMathOperator.DIV: "/",
-        SingleMathOperator.INV: "**"
+        PairMathOperator.EQ: "==",
+        SingleMathOperator.INV: "~"
     }
 
     LOG_OPEN_HEADER_SEPARATORS = "="*40

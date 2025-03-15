@@ -1,4 +1,8 @@
-from src.field_elements import AbstractFieldElement
+from src.field_elements import(
+    AbstractFieldElement,
+    PrimeFieldElement,
+    FiniteFieldElement
+)
 from common.entities import(
     TaskResult, TaskResultStatus,
     PairMathOperator, SingleMathOperator
@@ -47,6 +51,33 @@ class AbstractTask(ABC):
         with open(data_file_path, "r") as f:
             data = yaml.safe_load(f)
         return data
+
+    def _create_field_elements(
+        self,
+        field_element_class: AbstractFieldElement
+    ) -> List[AbstractFieldElement]:
+
+        if issubclass(field_element_class, PrimeFieldElement):
+            elements = [
+                PrimeFieldElement(a=element["a"], p=element["p"])
+                for element in self._data["elements"]
+            ]
+
+        elif issubclass(field_element_class, FiniteFieldElement):
+            elements = [
+                FiniteFieldElement(
+                    a=element["a"],
+                    p=element["p"],
+                    fx=element["fx"]
+                ) for element in self._data["elements"]
+            ]
+
+        else:
+            raise TypeError(
+                f"Invalid field element: {field_element_class}"
+            )
+
+        return elements
 
     def _log_two_elements_operation(
         self,

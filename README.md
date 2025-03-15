@@ -124,32 +124,59 @@ docker run --rm -v ${LOG_DIR}:/app/logs -e TASK=run-all advanced-algebra
 
 4. Example log file (Section 2 results):
 ```bash
-File Name: app_20250309_v6r5W8iARA-W9z-uAqlGgA.log
-Content:
-======================================== Environment Setup ========================================
+================================================ Environment Setup ================================================
 Environment Variables:
 {
     "task": "section-2"
 }
 ======================================== Start executing SecondSectionTask ========================================
-Element 1: 5
-Element 2: 6
-Element 3: 0
-Element 4: 1
+Element 0: 0 (P=13 | a_orig=13)
+Element 1: 5 (P=13 | a_orig=5)
+Element 2: 7 (P=13 | a_orig=7)
+Element 3: 1 (P=13 | a_orig=1)
+Element 4: 3 (P=11 | a_orig=3)
 
-Addition (e1+e2): 11
+Addition (e1+e0): 5
+Addition (e1+e2): 12
+Addition (e2+e2): 1
+Error:
+Operation 'add' requires both operands to be GF(13) arrays, not [GF(1, order=13), GF(3, order=11)].
+Addition (e3+e4): OPERATION FAILED (error message above)
 
-Subtraction (e1-e2): 12
+Subtraction (e1-e0): 5
+Subtraction (e1-e2): 11
+Subtraction (e2-e2): 0
+Error:
+Operation 'subtract' requires both operands to be GF(13) arrays, not [GF(1, order=13), GF(3, order=11)].
+Subtraction (e3-e4): OPERATION FAILED (error message above)
 
-Multiplication (e1*e2): 4
+Multiplication (e1*e0): 0
+Multiplication (e1*e2): 9
+Multiplication (e2*e2): 10
+Error:
+Operation 'add' requires both operands to be GF(11) arrays, not [GF(3, order=11), 13].
+Multiplication (e3*e4): OPERATION FAILED (error message above)
 
-Division (e1/e2): 3
+Error:
+Cannot compute the multiplicative inverse of 0 in a Galois field.
+Division (e1/e0): OPERATION FAILED (error message above)
+Division (e1/e2): 10
+Division (e2/e2): 1
+Error:
+Operation 'divide' requires both operands to be GF(13) arrays, not [GF(1, order=13), GF(3, order=11)].
+Division (e3/e4): OPERATION FAILED (error message above)
 
-Inversion (e1**-1): 8
-Inversion (e2**-1): 11
-Error! 'a' does not have an inverse in 'k' field
-Inversion (e3**-1): 0
-Inversion (e4**-1): 1
+Equality (e1==e0): False
+Equality (e1==e2): False
+Equality (e2==e2): True
+Equality (e3==e4): False
 
-====================================================================================================
+Error:
+Cannot compute the multiplicative inverse of 0 in a Galois field.
+Inversion (~e0): OPERATION FAILED (error message above)
+Inversion (~e1): 8
+Inversion (~e2): 2
+Inversion (~e3): 1
+Inversion (~e4): 4
+==================================================================================================================
 ```

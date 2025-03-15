@@ -5,7 +5,6 @@ from src.fields import FiniteField
 
 from itertools import product
 from typing import List, Union, Optional
-from copy import deepcopy
 
 import galois
 import numpy as np
@@ -31,7 +30,8 @@ class FiniteFieldElement(AbstractFieldElement):
     - Supports finding a generator (primitive element) of the finite field.
 
     Attributes:
-        a (np.ndarray): The array of coefficients representing the element in the finite field.
+        a_orig (np.ndarray | List[int]): The original 'a' value before mod operation.
+        a (np.ndarray | List[int]): The array of coefficients representing the element in the finite field.
         p (int): The prime number defining the finite field.
         fx (np.ndarray): The irreducible polynomial defining the field extension.
         n (int): The degree of the field extension.
@@ -45,15 +45,26 @@ class FiniteFieldElement(AbstractFieldElement):
         fx: Union[np.ndarray, List[int]]
     ) -> None:
         super().__init__(p)
+
         # irreducible polynomia
         self._fx = (
             fx if isinstance(fx, np.ndarray)
             else np.array(fx)
         )
+        
         # polynomia degree
         self._n = len(fx) - 1
+        # 'a' number of elements can be less than or equal to number of
+        # elements in 'fx', it can't be greater than len(fx)
+        if len(a) > len(fx):
+            raise ValueError(
+                f"Got {len(a)} coefficients for a field of degree {self._n}"
+            )
+
+        self._a_orig = a
         # coefficients of a - [a0,a1,...,an-1] (mod p)
         self._a = np.mod(a, self._p)
+
         try:
             # reducible field would raise an error
             self._field = FiniteField(self._p, self._fx)
@@ -61,8 +72,9 @@ class FiniteFieldElement(AbstractFieldElement):
             # raising a more accurate error
             raise ValueError(
                 "FiniteFieldElement creation failed due to a field " +
-                f"creation error: {e}"
+                f"creation error:\n{e}"
             )
+
         self._a_matrix = self.element_embedding_GLn(self._a)   
 
     @property
@@ -86,52 +98,86 @@ class FiniteFieldElement(AbstractFieldElement):
     # of two objects of the class will be performed.
     # Here we're basing our operations on the matrix representation of
     # the element.
-    def __add__(self, other: "FiniteFieldElement") -> "FiniteFieldElement":
-        self.type_check(other)
-        mat_result = self._a_matrix + other.a_matrix
-        result = np.mod(mat_result, self._p) 
-        return FiniteFieldElement(result[0, :], self._p, self._fx)
+    def __add__(self, other: "FiniteFieldElement") -> Optional["FiniteFieldElement"]:
+        try:
+            self.type_check(other)
+            self._check_other_is_from_the_same_field(other, "Addition")
+            mat_result = self._a_matrix + other.a_matrix
+            result = np.mod(mat_result, self._p) 
+            return FiniteFieldElement(result[0, :], self._p, self._fx)
+        except Exception as e:
+            LoggingHandler.log_error(e)
 
-    def __sub__(self, other: "FiniteFieldElement") -> "FiniteFieldElement":
-        self.type_check(other)
-        mat_result = self._a_matrix - other.a_matrix
-        result = np.mod(mat_result, self._p)   
-        return FiniteFieldElement(result[0, :], self._p, self._fx)
+    def __sub__(self, other: "FiniteFieldElement") -> Optional["FiniteFieldElement"]:
+        try:
+            self.type_check(other)
+            self._check_other_is_from_the_same_field(other, "Subtraction")
+            mat_result = self._a_matrix - other.a_matrix
+            result = np.mod(mat_result, self._p)   
+            return FiniteFieldElement(result[0, :], self._p, self._fx)
+        except Exception as e:
+            LoggingHandler.log_error(e)
 
-    def __mul__(self, other: "FiniteFieldElement") -> "FiniteFieldElement":
-        self.type_check(other)
-        mat_result = self._a_matrix @ other.a_matrix
-        result = np.mod(mat_result, self._p) 
-        return FiniteFieldElement(result[0,:], self._p, self._fx)
+    def __mul__(self, other: "FiniteFieldElement") -> Optional["FiniteFieldElement"]:
+        try:
+            self.type_check(other)
+            self._check_other_is_from_the_same_field(other, "Multiplication")
+            mat_result = self._a_matrix @ other.a_matrix
+            result = np.mod(mat_result, self._p) 
+            return FiniteFieldElement(result[0,:], self._p, self._fx)
+        except Exception as e:
+            LoggingHandler.log_error(e)
 
-    def __truediv__(self, other: "FiniteFieldElement") -> "FiniteFieldElement":
+    def __truediv__(self, other: "FiniteFieldElement") -> Optional["FiniteFieldElement"]:
         self.type_check(other)
         # 'GFp' is a field class of type 'galois'
         GFp = galois.GF(self._p**self._n)
         a_matrix = GFp(self._a_matrix.astype('int'))
         try:
+            self._check_other_is_from_the_same_field(other, "Division")
             other_inv = np.linalg.inv(GFp(other.a_matrix.astype('int')))
-        except:
-            LoggingHandler.log_error("Error: Division by zero")
-            return other
-        result = a_matrix @ other_inv
-        result = result.tolist()
-        return FiniteFieldElement(result[0], self._p, self._fx) 
+            result = a_matrix @ other_inv
+            result = result.tolist()
+            return FiniteFieldElement(result[0], self._p, self._fx)
+        except Exception as e:
+            LoggingHandler.log_error(e)
 
-    def __pow__(self, exp: int) -> "FiniteFieldElement":
-        matrix = self.a_matrix
-        if exp < 0:
-            # 'GFp' is a field class of type 'galois'
+    def __invert__(self) -> Optional["FiniteFieldElement"]:    
+        try:
+            if np.all(self._a == 0):
+                raise ValueError("tried to invert the zero element")
+
             GFp = galois.GF(self._p**self._n)
-            try:
-                matrix = np.array(np.linalg.inv(GFp(matrix.astype('int'))))
-            except:
-                LoggingHandler.log_error('Error: Division by zero')
-                return self
-            exp = -exp
-        mat_power = np.linalg.matrix_power(matrix, exp)
-        result = np.mod(mat_power, self._p)
-        return FiniteFieldElement(result[0, :], self._p, self.fx) 
+            matrix = GFp(self._a_matrix.astype("int"))
+            matrix_inv = np.linalg.inv(matrix)
+            result = matrix_inv[0, :].view(np.ndarray)
+            return FiniteFieldElement(result, self._p, self._fx)
+
+        except Exception as e:
+            LoggingHandler.log_error(f"Error:\n{e}")
+
+    # we added equality check overload
+    def __eq__(self, other: "FiniteFieldElement") -> bool:
+        self.type_check(other)
+        return (
+            # verifies same field, same order and element equality
+            self._p == other.p and
+            self._n == other.n and
+            np.array_equal(self._a, other.a)
+        )
+
+    def _check_other_is_from_the_same_field(
+        self,
+        other: "FiniteFieldElement",
+        opration: str
+    ) -> None:
+
+        if self._p != other.p or self._n != other.n:
+            raise ValueError(
+                f"Error:\nOperation '{opration}' is applicable only between " +
+                "elements of the same field.\n" +
+                f"self: P={self._p} n={self._n} | other: P={other.p} n={other.n}"
+            )
 
     def element_embedding_GLn(self, a: np.ndarray) -> np.ndarray:   
         basis_matrix = self._field.span
@@ -144,20 +190,30 @@ class FiniteFieldElement(AbstractFieldElement):
         element = np.mod(elements_sum, self._p)
         return element
 
-    def pretty_print(self, print_mode: PrintMode) -> str:
-        """Creates print message to use in LoggingHandler"""
+    def pretty_print(
+        self,
+        print_mode: Optional[PrintMode] = PrintMode.VECTOR
+    ) -> str:
+        """
+        Creates print message to use in LoggingHandler.
+        Gets an input PrintMode (default is 'VECTOR'). 
+        """
 
         if print_mode is PrintMode.VECTOR:
-            print_msg += f"Element = {self._a}"
+            print_msg = f"Element ({print_mode.name}) = {self._a}"
 
         elif print_mode is PrintMode.POLYNOMIAL:
-            print_msg += f"Element = {np.polynomial.Polynomial(self._a)}"
+            print_msg = f"Element ({print_mode.name}) = " \
+                + str(np.polynomial.Polynomial(self._a))
 
         elif print_mode is PrintMode.MATRIX:
-            matrix = str(self.a_matrix.astype(int))\
-                .replace('[', '')\
-                .replace(']', '')
-            print_msg += f"Element =\n{matrix}"
+            matrix = str(self._a_matrix.astype(int)) \
+                .replace("[", " ") \
+                .replace("]", " ")
+            print_msg = f"Element ({print_mode.name}) =\n{matrix}"
+
+        else:
+            raise TypeError(f"Unrecognized 'PrintMode': {print_mode}")
 
         return print_msg
 

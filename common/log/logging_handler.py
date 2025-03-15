@@ -6,6 +6,7 @@ from src.fields import FiniteField
 from typing import List, Optional, Tuple
 
 import logging
+import numpy as np
 
 
 class LoggingHandler:
@@ -36,55 +37,91 @@ class LoggingHandler:
     @staticmethod
     def log_elements(
         elements: List[AbstractFieldElement],
-        start_idx: Optional[int] = 1
+        start_idx: Optional[int] = 1,
+        add_element_image: Optional[bool] = False,
+        end_with_empty_line: Optional[bool] = True
     ) -> None:
 
+        last_element_idx = (
+            len(elements) if start_idx == 1
+            else len(elements) - 1
+        )
+
         for i, element in enumerate(elements, start_idx):
-            logging.info(f"Element {i}: {element.a}")
-        logging.info("")
+            # P and a_orig helps to see if the mod operation is correct
+            log_msg = f"Element {i}: {element.a} (P={element.p} | a_orig={element.a_orig})"
+            if add_element_image:
+                log_msg += f"\nElement image:\n{element.a_matrix}"
+                if i != last_element_idx:
+                    log_msg += "\n"
+            LoggingHandler.log_info(log_msg)
+
+        if end_with_empty_line:
+            logging.info("")
     
     @staticmethod
     def log_fields(
         fields: List[FiniteField],
-        start_idx: Optional[int] = 1
+        start_idx: Optional[int] = 1,
+        end_with_empty_line: Optional[bool] = True
     ) -> None:
 
         for i, field in enumerate(fields, start_idx):
-            logging.info(f"Field {i}: Degree of f(x) is {field.n}")
-        logging.info("")
+            logging.info(
+                f"Field {i}: P={field.p} | f(x)={field.fx} | " +
+                f"Degree={field.n}"
+            )
+
+        if end_with_empty_line:
+            logging.info("")
 
     @staticmethod
     def log_two_elements_operation(
         element_pairs: List[Tuple[AbstractFieldElement, AbstractFieldElement]],
         operator_type: PairMathOperator,
-        start_idx: Optional[int] = 1
+        end_with_empty_line: Optional[bool] = True
     ) -> None:
 
         operator = Consts.PAIR_OP_MAP[operator_type]
         operator_symbol = Consts.OP_SYMBOL_MAP[operator_type]
 
-        for i, pair in enumerate(element_pairs, start_idx):
-            e1, e2 = pair
-            logging.info(
-                f"{operator_type.value} (e{i}{operator_symbol}e{i+1}): " +
-                f"{operator(e1, e2).a}"
-            )
-        logging.info("")
+        for e1, i1, e2, i2 in element_pairs:
+            log_msg = f"{operator_type.value} (e{i1}{operator_symbol}e{i2}): "
+
+            op_res = operator(e1, e2)
+            if op_res is not None:
+                if type(op_res) in [np.bool, bool]:
+                    log_msg += f"{op_res}"
+                else:
+                    log_msg += f"{op_res.a}"
+            else:
+                log_msg += "OPERATION FAILED (error message above)"
+            logging.info(log_msg)
+
+        if end_with_empty_line:
+            logging.info("")
 
     @staticmethod
     def log_single_element_operation(
         elements: List[AbstractFieldElement],
         operator_type: SingleMathOperator,
-        start_idx: Optional[int] = 1
+        start_idx: Optional[int] = 1,
+        end_with_empty_line: Optional[bool] = True
     ) -> None:
 
         operator = Consts.SINGLE_OP_MAP[operator_type]
-        operation_const = Consts.SINGLE_OP_CONST_MAP[operator_type]
+        # operation_const = Consts.SINGLE_OP_CONST_MAP[operator_type]
         operator_symbol = Consts.OP_SYMBOL_MAP[operator_type]
 
         for i, element in enumerate(elements, start_idx):
-            logging.info(
-                f"{operator_type.value} (e{i}{operator_symbol}{operation_const}): " +
-                f"{operator(element, operation_const).a}"
-            )
-        logging.info("")
+            log_msg = f"{operator_type.value} ({operator_symbol}e{i}): "
+            op_res = operator(element)
+
+            if op_res is not None:
+                log_msg += f"{op_res.a}"
+            else:
+                log_msg += "OPERATION FAILED (error message above)"
+            logging.info(log_msg)
+
+        if end_with_empty_line:
+            logging.info("")

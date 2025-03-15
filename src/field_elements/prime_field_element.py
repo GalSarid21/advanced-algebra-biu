@@ -24,24 +24,25 @@ class PrimeFieldElement(AbstractFieldElement):
     - Handles inversion and error cases correctly.
 
     Attributes:
-        a (galois.FieldArray): The field element.
+        a_orig (galois.FieldArray | int): The original 'a' value before mod operation.
+        a (galois.FieldArray | int): The field element.
         p (int): The prime number defining the field.
     """
     def __init__(self, a: Union[galois.FieldArray, int], p: int) -> None:
         super().__init__(p)  
         self._gf_p = galois.GF(self._p)
-
-        # a represent the element in the field.
+        self._a_orig = a
+        # 'a' represent the element in the field.
         # can be passed as int or 'galois.FieldArray'.
-        # if a is an int, we create a 'galois.FieldArray'
-        # object using it and assign as the class value of a.
+        # if 'a' is an int, we create a 'galois.FieldArray'
+        # object using it and assign as the object value of 'a'.
         if isinstance(a, int):
             self._a = self._gf_p(a % self._p)
-        elif isinstance(a, self._gf_p):
+        elif isinstance(a, galois.FieldArray):
             self._a = a
         else:
             raise ValueError(
-                "a must be if type 'int' or 'galois.FieldArray'"
+                "Input 'a' must be of type 'int' or 'galois.FieldArray'"
             )
 
     @property
@@ -58,40 +59,55 @@ class PrimeFieldElement(AbstractFieldElement):
     # OPERATOR OVERLOADING:
     # Defines how basic operations (such addition, subtraction, etc.)
     # of two objects of the class will be performed.
-    def __add__(self, other: "PrimeFieldElement") -> "PrimeFieldElement":
+    def __add__(self, other: "PrimeFieldElement") -> Optional["PrimeFieldElement"]:
         self.type_check(other)
-        return PrimeFieldElement(self._a + other.a, self._p)
+        # both 'self._a' and 'other.a' are 'galois.FieldArray'.
+        # the 'galois' package handles modular arithmetic.
+        try:
+            return PrimeFieldElement(self._a + other.a, self._p)
+        except Exception as e:
+            LoggingHandler.log_error(f"Error:\n{e}")
 
-    def __sub__(self, other: "PrimeFieldElement") -> "PrimeFieldElement":
+    def __sub__(self, other: "PrimeFieldElement") -> Optional["PrimeFieldElement"]:
         self.type_check(other)
-        return PrimeFieldElement(self._a - other.a, self._p)          
+        # both 'self._a' and 'other.a' are 'galois.FieldArray'.
+        # the 'galois' package handles modular arithmetic.
+        try:
+            return PrimeFieldElement(self._a - other.a, self._p)
+        except Exception as e:
+            LoggingHandler.log_error(f"Error:\n{e}")   
 
     def __mul__(self, other: "PrimeFieldElement"):
         self.type_check(other)
-        return PrimeFieldElement(self._a * other.a, self._p)
+        # both 'self._a' and 'other.a' are 'galois.FieldArray'.
+        # the 'galois' package handles modular arithmetic.
+        try:
+            return PrimeFieldElement(self._a * other.a, self._p)
+        except Exception as e:
+            LoggingHandler.log_error(f"Error:\n{e}")
 
-    def __truediv__(self, other: "PrimeFieldElement") -> "PrimeFieldElement":
+    def __truediv__(self, other: "PrimeFieldElement") -> Optional["PrimeFieldElement"]:
         self.type_check(other)
-        return PrimeFieldElement(self._a / other.a, self._p)   
+        # both 'self._a' and 'other.a' are 'galois.FieldArray'.
+        # the 'galois' package handles modular arithmetic.
+        try:
+            return PrimeFieldElement(self._a / other.a, self._p)
+        except Exception as e:
+            LoggingHandler.log_error(f"Error:\n{e}")
+    
+    def __invert__(self) -> Optional["PrimeFieldElement"]:
+        try:
+            return PrimeFieldElement(self._a**-1, self._p)
+        except Exception as e:
+            LoggingHandler.log_error(f"Error:\n{e}")
 
-    def __pow__(self, exp: int) -> "PrimeFieldElement":
-        # uses only for inversion, hence checking that exp is -1.
-        # 'regular' exponential is calculated using the 'exp_by_squaring'
-        # function.
-        if self._a == 0:
-            # in the multiplicative group zero element doesn't exist
-            LoggingHandler.log_error(
-                "Error! 'a' does not have an inverse in 'k' field"
-            )
-            return self
-        if exp != -1:
-            LoggingHandler.log_error(
-                "'**' operator is using for inversion only, 'exp' must be -1!"
-            )
-            return self
-        return PrimeFieldElement(self._a**exp, self._p)
+    # we added equality check overload
+    def __eq__(self, other: "PrimeFieldElement") -> bool:
+        self.type_check(other)
+        # verifies same field and element equality
+        return self._p == other.p and self._a == other.a
 
-    def get_multiplicative_identity(self) -> "PrimeFieldElement":
+    def get_multiplicative_identity(self) -> Optional["PrimeFieldElement"]:
         """Returns the multiplicative identity element (1) of the prime field."""
         return PrimeFieldElement(1, self._p)
 

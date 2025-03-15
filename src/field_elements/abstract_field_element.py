@@ -1,7 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import TypeVar, Optional, Any
-
-T = TypeVar("T", bound="AbstractFieldElement")
+from typing import Optional, Any
 
 
 class AbstractFieldElement(ABC):
@@ -22,6 +20,9 @@ class AbstractFieldElement(ABC):
         self._p = p
         # a is created at the object
         self._a = None
+        # 'a orig' helps to log mod operation over original 'a'
+        # that was passed to the constructor.
+        self._a_orig = None
 
     @property
     def p(self) -> int:
@@ -30,6 +31,10 @@ class AbstractFieldElement(ABC):
     @property
     def a(self) -> Any:
         return self._a
+
+    @property
+    def a_orig(self) -> Any:
+        return self._a_orig
 
     def type_check(
         self,
