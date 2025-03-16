@@ -54,16 +54,21 @@ class FiniteFieldElement(AbstractFieldElement):
         
         # polynomia degree
         self._n = len(fx) - 1
-        # 'a' number of elements can be less than or equal to number of
-        # elements in 'fx', it can't be greater than len(fx)
+        self._a_orig = a
+
+        # number of elements in 'a' can't be greater than len(fx)
         if len(a) > len(fx):
             raise ValueError(
                 f"Got {len(a)} coefficients for a field of degree {self._n}"
             )
 
-        self._a_orig = a
-        # coefficients of a - [a0,a1,...,an-1] (mod p)
-        self._a = np.mod(a, self._p)
+        a_arr = np.array(a) if not isinstance(a, np.ndarray) else a
+        a_mod = np.mod(a_arr, self._p)
+        # number of elements 'a' can be less than len(fx)
+        # in that case - we need to pad 'a'
+        if len(a_mod) < len(fx):
+            a_mod = np.pad(a_mod, (0, self._n - len(a)), "constant")
+        self._a = a_mod
 
         try:
             # reducible field would raise an error

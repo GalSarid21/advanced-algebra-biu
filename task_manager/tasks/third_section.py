@@ -1,5 +1,6 @@
 from task_manager.tasks.abstract import AbstractTask
 from src.field_elements import FiniteFieldElement
+from common.entities import PrintMode
 from src.fields import FiniteField
 from common.log import LoggingHandler
 
@@ -51,7 +52,8 @@ class ThirdSectionTask(AbstractTask):
                     fx=element["fx"]
                 )
 
-                log_msg = f"{element_obj.pretty_print()} " \
+                log_msg = f"{element_obj.pretty_print()} | " \
+                    + f"{element_obj.pretty_print(PrintMode.POLYNOMIAL)}\n" \
                     + f"(P={element_obj.p} | f(x)={element_obj.fx} | " \
                     + f"n={element_obj.n} | a_oring={element_obj.a_orig})\n" \
                     + "Element is linked to 'l' by field property:\n" \

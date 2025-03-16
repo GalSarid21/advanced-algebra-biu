@@ -54,3 +54,14 @@ elements:
     a:
       - 11
       - 8
+  - p: 5
+    # irreducible polynomial - x^2 + 3x + 7
+    fx:
+      - 7
+      - 3
+      - 0
+      - 1
+    # 'a' will be padded
+    a:
+      - 11
+      - 8
