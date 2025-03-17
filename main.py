@@ -19,6 +19,6 @@ if __name__ == "__main__":
 
     except Exception as e:
         LoggingHandler.log_error(
-            f"Unexpected Error: {e}\n" +\
+            f"Unexpected  Error: {e}\n" +\
             f"Stacktrace:\n{traceback.format_exc()}"
         )
