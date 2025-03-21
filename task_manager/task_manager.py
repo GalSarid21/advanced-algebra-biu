@@ -3,7 +3,8 @@ from task_manager.tasks import(
     SecondSectionTask,
     ThirdSectionTask,
     FourthSectionTask,
-    FifthSectionTask
+    FifthSectionTask,
+    SixthSectionTask
 )
 from common.entities import TaskType, TaskResult, TaskResultStatus
 from common.log import LoggingHandler
@@ -22,6 +23,7 @@ class TaskManager:
             TaskType.SECTION_3: ThirdSectionTask,
             TaskType.SECTION_4: FourthSectionTask,
             TaskType.SECTION_5: FifthSectionTask,
+            TaskType.SECTION_6: SixthSectionTask
         }
 
     def run(self) -> None:

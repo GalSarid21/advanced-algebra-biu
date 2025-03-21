@@ -54,13 +54,14 @@ class AbstractTask(ABC):
 
     def _create_field_elements(
         self,
-        field_element_class: AbstractFieldElement
+        field_element_class: AbstractFieldElement,
+        elements_key: Optional[str] = "elements"
     ) -> List[AbstractFieldElement]:
 
         if issubclass(field_element_class, PrimeFieldElement):
             elements = [
                 PrimeFieldElement(a=element["a"], p=element["p"])
-                for element in self._data["elements"]
+                for element in self._data[elements_key]
             ]
 
         elif issubclass(field_element_class, FiniteFieldElement):
@@ -69,7 +70,7 @@ class AbstractTask(ABC):
                     a=element["a"],
                     p=element["p"],
                     fx=element["fx"]
-                ) for element in self._data["elements"]
+                ) for element in self._data[elements_key]
             ]
 
         else:
