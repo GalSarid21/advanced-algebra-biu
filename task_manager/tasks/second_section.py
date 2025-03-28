@@ -1,31 +1,33 @@
 from task_manager.tasks.abstract import AbstractTask
 from src.field_elements import PrimeFieldElement
-from common.entities import SingleMathOperator, PairMathOperator
-from common.log import LoggingHandler
+from common.entities import SingleMathOperator, PairMathOperator, TaskType
+
+import common.log.logging_handler as log
 
 from typing import List, Tuple
 
 
 class SecondSectionTask(AbstractTask):
+    _TYPE = TaskType.SECTION_2
 
     def __init__(self) -> None:
         super().__init__("./data/second_section.yaml")
 
     def _run(self) -> None:
         elements = self._create_field_elements(PrimeFieldElement)
-        LoggingHandler.log_elements(elements, start_idx=0)
+        log.elements(elements, start_idx=0)
         element_pairs = self._get_element_pairs(elements)
 
         # run all pair operations: add, sub, mul and div
         for op_type in PairMathOperator:
-            LoggingHandler.log_two_elements_operation(
+            log.two_elements_operation(
                 element_pairs=element_pairs,
                 operator_type=op_type
             )
 
         # run inversion
         # if no inverse exists, return the zero element and print an error message 
-        LoggingHandler.log_single_element_operation(
+        log.single_element_operation(
             elements=elements,
             operator_type=SingleMathOperator.INV,
             end_with_empty_line=False,

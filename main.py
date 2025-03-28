@@ -1,6 +1,8 @@
-from task_manager.cli import CliEnvArgs
+from task_manager.cli.env_args import read_cli_env_args
+from common.log.config import configure_log
 from task_manager import TaskManager
-from common.log import LogConfig, LoggingHandler
+
+import common.log.logging_handler as log
 
 import traceback
 import sys
@@ -9,8 +11,8 @@ import sys
 if __name__ == "__main__":
 
     try:
-        LogConfig.configure()
-        args = CliEnvArgs.get_args()
+        configure_log()
+        args = read_cli_env_args()
         task_manager = TaskManager(args)
         task_manager.run()
 
@@ -18,7 +20,7 @@ if __name__ == "__main__":
         sys.exit(130)
 
     except Exception as e:
-        LoggingHandler.log_error(
+        log.error(
             f"Unexpected Error: {e}\n" +\
             f"Stacktrace:\n{traceback.format_exc()}"
         )

@@ -1,7 +1,6 @@
-from common.consts import Consts
+import common.consts as consts
 
 from typing import List
-
 import numpy as np
 
 
@@ -53,7 +52,7 @@ class FiniteField:
 
     def _validate_irreducible(self) -> None:
         """Checks that f(x) is indeed irreducible (only for degrees 2/3)"""
-        if self._n in Consts.REDUCIBLE_DEGREES:
+        if self._n in consts.REDUCIBLE_DEGREES:
             for i in range(self._p):
               root = np.polyval(self._fx[::-1], i) % self._p 
               if root == 0:

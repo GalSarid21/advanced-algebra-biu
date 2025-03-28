@@ -1,10 +1,11 @@
 from src.field_elements import AbstractFieldElement
 from common.entities import PrintMode
-from common.log import LoggingHandler
 from src.fields import FiniteField
 
-from itertools import product
+import common.log.logging_handler as log
+
 from typing import List, Union, Optional
+from copy import deepcopy
 
 import galois
 import numpy as np
@@ -111,7 +112,7 @@ class FiniteFieldElement(AbstractFieldElement):
             result = np.mod(mat_result, self._p) 
             return FiniteFieldElement(result[0, :], self._p, self._fx)
         except Exception as e:
-            LoggingHandler.log_error(e)
+            log.error(e)
 
     def __sub__(self, other: "FiniteFieldElement") -> Optional["FiniteFieldElement"]:
         try:
@@ -121,7 +122,7 @@ class FiniteFieldElement(AbstractFieldElement):
             result = np.mod(mat_result, self._p)   
             return FiniteFieldElement(result[0, :], self._p, self._fx)
         except Exception as e:
-            LoggingHandler.log_error(e)
+            log.error(e)
 
     def __mul__(self, other: "FiniteFieldElement") -> Optional["FiniteFieldElement"]:
         try:
@@ -131,7 +132,7 @@ class FiniteFieldElement(AbstractFieldElement):
             result = np.mod(mat_result, self._p) 
             return FiniteFieldElement(result[0,:], self._p, self._fx)
         except Exception as e:
-            LoggingHandler.log_error(e)
+            log.error(e)
 
     def __truediv__(self, other: "FiniteFieldElement") -> Optional["FiniteFieldElement"]:
         self.type_check(other)
@@ -145,7 +146,7 @@ class FiniteFieldElement(AbstractFieldElement):
             result = result.tolist()
             return FiniteFieldElement(result[0], self._p, self._fx)
         except Exception as e:
-            LoggingHandler.log_error(e)
+            log.error(e)
 
     def __invert__(self) -> Optional["FiniteFieldElement"]:    
         try:
@@ -159,7 +160,7 @@ class FiniteFieldElement(AbstractFieldElement):
             return FiniteFieldElement(result, self._p, self._fx)
 
         except Exception as e:
-            LoggingHandler.log_error(f"Error:\n{e}")
+            log.error(f"Error:\n{e}")
 
     # we added equality check overload
     def __eq__(self, other: "FiniteFieldElement") -> bool:
@@ -200,7 +201,7 @@ class FiniteFieldElement(AbstractFieldElement):
         print_mode: Optional[PrintMode] = PrintMode.VECTOR
     ) -> str:
         """
-        Creates print message to use in LoggingHandler.
+        Creates print message to use in log.
         Gets an input PrintMode (default is 'VECTOR'). 
         """
 
@@ -230,51 +231,22 @@ class FiniteFieldElement(AbstractFieldElement):
         """
         Computes the multiplicative order of 'a' in the finite field.
         The multiplicative order of an element a is the smallest positive
-        integer k such that a^k=1(mod p).
-        Uses vectorized NumPy computations for performance.
+        integer k such that a^k = I (identity matrix) (mod p).
+        Uses fast exponentiation for efficiency.
         """
         if np.all(self._a == 0):
-            LoggingHandler.log_error(
-                "Error: a is zero, not in the prime field"
-            )
+            log.error("Error: a is zero, not in the prime field")
             return
 
-        # generate power sequence (self._a^k mod p) for k = 1, 2, ..., p-1
-        max_k = self._p - 1
-        mat_power = np.linalg.matrix_power(
-            self._a,
-            np.arange(1, max_k + 1)[:, None, None]
-        )
-        powers = np.mod(mat_power, self._p)
+        max_order = self._p**self._n - 1
+        identity = self.get_multiplicative_identity()
+        result = deepcopy(self)
+        
+        for pow in range(1, max_order + 1):
+            if np.all(result._a == identity._a):
+                return pow
 
-        # finds the first k where a^k = I (identity matrix)
-        identity = np.eye(self._n, dtype=int)
-        orders = np.where(np.all(powers == identity, axis=(1, 2)))[0]
+            result *= self
 
-        return (
-            (orders[0] + 1)
-            if orders.size > 0
-            else None
-        )
-
-    def generator(self) -> Union["FiniteFieldElement", None]:
-        """
-        Generates a generator (primitive element) of the finite field, e.g -
-        an element of the field that has the maximum possible order.
-        This function attempts to find such a generator by checking the order
-        of elements in the field.
-        """
-        # create an array of field elements, ranging from 0 to p-1
-        field_elements = np.arange(self._p)
-        # create a list of n copies of the field elements for generating 
-        # vectors of length n
-        field_elements_n = [field_elements for _ in range(self._n)]
-        # generate all possible combinations (vectors) of elements in the 
-        # field, except the zero vector (the first element in the product list)
-        vectors = list(product(*field_elements_n))[1:]
-
-        for vector in vectors:
-            finite_field_element = FiniteFieldElement(vector, self._p, self._fx)
-            order = finite_field_element.mul_order()
-            if order == self._p**self._n - 1:
-                return finite_field_element
+        log.error("Error: Order computation exceeded expected limit")
+        return

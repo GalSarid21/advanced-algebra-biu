@@ -1,5 +1,6 @@
 from src.field_elements import AbstractFieldElement
-from common.log import LoggingHandler
+
+import common.log.logging_handler as log
 
 from typing import Union, Optional
 from copy import deepcopy
@@ -66,7 +67,7 @@ class PrimeFieldElement(AbstractFieldElement):
         try:
             return PrimeFieldElement(self._a + other.a, self._p)
         except Exception as e:
-            LoggingHandler.log_error(f"Error:\n{e}")
+            log.error(f"Error:\n{e}")
 
     def __sub__(self, other: "PrimeFieldElement") -> Optional["PrimeFieldElement"]:
         self.type_check(other)
@@ -75,7 +76,7 @@ class PrimeFieldElement(AbstractFieldElement):
         try:
             return PrimeFieldElement(self._a - other.a, self._p)
         except Exception as e:
-            LoggingHandler.log_error(f"Error:\n{e}")   
+            log.error(f"Error:\n{e}")   
 
     def __mul__(self, other: "PrimeFieldElement"):
         self.type_check(other)
@@ -84,7 +85,7 @@ class PrimeFieldElement(AbstractFieldElement):
         try:
             return PrimeFieldElement(self._a * other.a, self._p)
         except Exception as e:
-            LoggingHandler.log_error(f"Error:\n{e}")
+            log.error(f"Error:\n{e}")
 
     def __truediv__(self, other: "PrimeFieldElement") -> Optional["PrimeFieldElement"]:
         self.type_check(other)
@@ -93,13 +94,13 @@ class PrimeFieldElement(AbstractFieldElement):
         try:
             return PrimeFieldElement(self._a / other.a, self._p)
         except Exception as e:
-            LoggingHandler.log_error(f"Error:\n{e}")
+            log.error(f"Error:\n{e}")
     
     def __invert__(self) -> Optional["PrimeFieldElement"]:
         try:
             return PrimeFieldElement(self._a**-1, self._p)
         except Exception as e:
-            LoggingHandler.log_error(f"Error:\n{e}")
+            log.error(f"Error:\n{e}")
 
     # we added equality check overload
     def __eq__(self, other: "PrimeFieldElement") -> bool:
@@ -121,7 +122,7 @@ class PrimeFieldElement(AbstractFieldElement):
         back to 1.
         """
         if self._a == 0:
-            LoggingHandler.log_error(
+            log.error(
                 "Error: a is zero, not in the prime field"
             )
             return

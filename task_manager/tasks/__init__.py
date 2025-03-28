@@ -3,6 +3,8 @@ from .third_section import ThirdSectionTask
 from .fourth_section import FourthSectionTask
 from .fifth_section import FifthSectionTask
 from .sixth_section import SixthSectionTask
+from .seventh_section import SeventhSectionTask
+from .eighth_section import EighthSectionTask
 from .abstract import AbstractTask
 
 ALL_TASKS = [
@@ -10,5 +12,7 @@ ALL_TASKS = [
     ThirdSectionTask,
     FourthSectionTask,
     FifthSectionTask,
-    SixthSectionTask
+    SixthSectionTask,
+    SeventhSectionTask,
+    EighthSectionTask
 ]

@@ -4,13 +4,15 @@ from src.field_elements import(
     PrimeFieldElement,
     AbstractFieldElement
 )
-from common.entities import PrintMode, SingleMathOperator, PairMathOperator
-from common.log import LoggingHandler
+from common.entities import TaskType
 
-from typing import List, Tuple
+import common.log.logging_handler as log
+
+from typing import List
 
 
 class SixthSectionTask(AbstractTask):
+    _TYPE = TaskType.SECTION_6
 
     def __init__(self) -> None:
         super().__init__("./data/sixth_section.yaml")
@@ -23,23 +25,23 @@ class SixthSectionTask(AbstractTask):
             elements_key="k_elements"
         )
 
-        LoggingHandler.log_info(
+        log.info(
             "*** Testing 'exp_by_squaring' for elements in k (PrimeFieldElements)"
         )
-        LoggingHandler.log_elements(k_elements, start_idx=0)
+        log.elements(k_elements, start_idx=0)
         self._test_exp_by_squaring(elements=k_elements, exps=exps)
-        LoggingHandler.log_info("")
+        log.info("")
 
         l_elements = self._create_field_elements(
             field_element_class=FiniteFieldElement,
             elements_key="l_elements"
         )
 
-        LoggingHandler.log_info(
+        log.info(
             "*** Testing 'exp_by_squaring' for elements in l (FiniteFieldElements)"
         )
 
-        LoggingHandler.log_elements(l_elements, start_idx=0)
+        log.elements(l_elements, start_idx=0)
         self._test_exp_by_squaring(elements=l_elements, exps=exps)
 
     def _test_exp_by_squaring(
@@ -55,4 +57,4 @@ class SixthSectionTask(AbstractTask):
                     log_msg = f"'exp_by_squaring' [e{i}**{exp}]: {exp_op_res.a}"
                 else:
                     log_msg = "OPERATION FAILED (error message above)"
-                LoggingHandler.log_info(log_msg)
+                log.info(log_msg)
