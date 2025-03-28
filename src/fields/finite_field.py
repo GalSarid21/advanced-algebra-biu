@@ -1,7 +1,6 @@
-from common.consts import Consts
+import common.consts as consts
 
 from typing import List
-
 import numpy as np
 
 
@@ -53,14 +52,12 @@ class FiniteField:
 
     def _validate_irreducible(self) -> None:
         """Checks that f(x) is indeed irreducible (only for degrees 2/3)"""
-        if self._n in Consts.REDUCIBLE_DEGREES:
+        if self._n in consts.REDUCIBLE_DEGREES:
             for i in range(self._p):
               root = np.polyval(self._fx[::-1], i) % self._p 
               if root == 0:
                   raise ValueError(
-                      "fx is reducible! " +
-                      f"p: {self._p}, fx: {self._fx}, " +
-                      f"degree: {self._n}, root: {i}"
+                      f"fx is reducible! degree: {self._n}, root: {i}"
                     )
 
     def embedding_GLn(self):

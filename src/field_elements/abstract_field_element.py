@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
-from typing import TypeVar, Optional, Any
-
-T = TypeVar("T", bound="AbstractFieldElement")
+from typing import Optional, Any
+from copy import deepcopy
 
 
 class AbstractFieldElement(ABC):
@@ -22,6 +21,9 @@ class AbstractFieldElement(ABC):
         self._p = p
         # a is created at the object
         self._a = None
+        # 'a orig' helps to log mod operation over original 'a'
+        # that was passed to the constructor.
+        self._a_orig = None
 
     @property
     def p(self) -> int:
@@ -30,6 +32,10 @@ class AbstractFieldElement(ABC):
     @property
     def a(self) -> Any:
         return self._a
+
+    @property
+    def a_orig(self) -> Any:
+        return self._a_orig
 
     def type_check(
         self,
@@ -44,21 +50,28 @@ class AbstractFieldElement(ABC):
 
     def exp_by_squaring(
         self,
-        k: "AbstractFieldElement",
         n: int
-    ) -> "AbstractFieldElement":
+    ) -> Optional["AbstractFieldElement"]:
         """
-        Computes k^n using the Exponentiation by Squaring method iteratively.
+        Computes self^n using the Exponentiation by Squaring method iteratively.
         This function efficiently calculates the power of field element using
         a while loop.
 
-        - If n is negative, it computes the reciprocal (k^(-n)).
+        - If n is negative, it computes the reciprocal (self^(-n)).
         - Uses a loop to square the base and reduce the
           exponent by half in each step (hence time complexity is O(log[n])).
         - Multiplies the result only when n is odd.
+
+        * If an error occured during calculation, for example - tryping to
+          calculate the exp of zero, the returned value will be None and
+          internal error will be printed.
         """
+        # creates a deepcopy of self value to not change it during calculation
+        element = deepcopy(self)
         if n < 0:
-            k = k**-1
+            element = ~element
+            if element is None:
+                return
             n = -n
 
         # start with the identity element
@@ -67,8 +80,8 @@ class AbstractFieldElement(ABC):
         while n > 0:
             # checks if n is odd
             if n % 2 == 1:
-                result *= k
-            k *= k
+                result *= element
+            element *= element
             n //= 2
 
         return result

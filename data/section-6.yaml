@@ -1,0 +1,58 @@
+k_elements:
+  # element 0
+  - p: 13
+    a: 13
+  # element 1
+  - p: 13
+    a: 5
+  # element 2
+  - p: 13
+    a: 7
+  # element 3
+  - p: 13
+    a: 1
+l_elements:
+  # element 0
+  - p: 47
+    a:
+      - 0
+      - 47
+      - 0
+    fx:
+     - 42
+     - 3
+     - 0
+     - 1
+  # element 1
+  - p: 47
+    a:
+      - 1
+      - 48
+      - 95
+    fx:
+     - 42
+     - 3
+     - 0
+     - 1
+   # element 2
+  - p: 47
+    a:
+      - 3
+      - 5
+      - 45
+    fx:
+     - 42
+     - 3
+     - 0
+     - 1
+  # element 3
+  - p: 47
+    a:
+      - 61
+      - 21
+      - 2
+    fx:
+     - 42
+     - 3
+     - 0
+     - 1

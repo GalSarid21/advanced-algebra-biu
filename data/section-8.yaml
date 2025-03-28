@@ -1,0 +1,41 @@
+fields:
+
+  - p: 3
+    fx:
+      - 2
+      - 2
+      - 1
+    expected_generator:
+      - 0
+      - 1
+
+  - p: 3
+    fx:
+      - 1
+      - 2
+      - 0
+      - 1
+    expected_generator:
+      - 0
+      - 0
+      - 2
+
+  - p: 5
+    fx:
+      - 2
+      - 4
+      - 1
+    expected_generator:
+      - 0
+      - 1
+
+  - p: 47
+    fx:
+      - 42
+      - 3
+      - 0
+      - 1
+    expected_generator:
+      - 0
+      - 0
+      - 5
