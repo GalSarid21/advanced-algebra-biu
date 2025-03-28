@@ -4,6 +4,7 @@ from common.entities import TaskType
 from src.fields import FiniteField
 
 import common.log.logging_handler as log
+import common.consts as consts
 
 from typing import List, Dict, Union
 
@@ -12,9 +13,6 @@ import numpy as np
 
 class EighthSectionTask(AbstractTask):
     _TYPE = TaskType.SECTION_8
-
-    def __init__(self) -> None:
-        super().__init__("./data/eighth_section.yaml")
 
     def _run(self) -> None:
 

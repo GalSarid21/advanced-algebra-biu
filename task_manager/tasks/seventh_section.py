@@ -14,9 +14,6 @@ from typing import List
 class SeventhSectionTask(AbstractTask):
     _TYPE = TaskType.SECTION_7
 
-    def __init__(self) -> None:
-        super().__init__("./data/seventh_section.yaml")
-
     def _run(self) -> None:
 
         k_elements = self._create_field_elements(

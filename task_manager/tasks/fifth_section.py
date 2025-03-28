@@ -13,9 +13,6 @@ from typing import List, Tuple
 class FifthSectionTask(AbstractTask):
     _TYPE = TaskType.SECTION_5
 
-    def __init__(self) -> None:
-        super().__init__("./data/fifth_section.yaml")
-
     def _run(self) -> None:
         elements = self._create_field_elements(FiniteFieldElement)
         log.info(

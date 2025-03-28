@@ -10,9 +10,6 @@ from typing import List, Tuple
 class SecondSectionTask(AbstractTask):
     _TYPE = TaskType.SECTION_2
 
-    def __init__(self) -> None:
-        super().__init__("./data/second_section.yaml")
-
     def _run(self) -> None:
         elements = self._create_field_elements(PrimeFieldElement)
         log.elements(elements, start_idx=0)

@@ -29,3 +29,5 @@ REDUCIBLE_DEGREES = [2, 3]
 
 INVALID_ENUM_CREATION_MSG = "Tried to create {obj} instance with invalid " \
     + "`prompting_mode` value: {arg}"
+
+TASK_DATA_FILE_PATH = "./data/{section}.yaml"

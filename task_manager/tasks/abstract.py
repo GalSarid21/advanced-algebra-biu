@@ -4,9 +4,9 @@ from src.field_elements import(
     FiniteFieldElement
 )
 from common.entities import TaskResult, TaskResultStatus, TaskType
-from src.fields import FiniteField
 
 import common.log.logging_handler as log
+import common.consts as consts
 
 from typing import Dict, Any, List, Optional
 from abc import ABC, abstractmethod
@@ -27,7 +27,9 @@ class AbstractTask(ABC):
         """
         pass
 
-    def __init__(self, data_file_path: str) -> None:
+    def __init__(self) -> None:
+        data_file_path =\
+            consts.TASK_DATA_FILE_PATH.format(section=self._TYPE.value)
         self._data = self.read_task_data(data_file_path)
 
     def run(self) -> TaskResult:

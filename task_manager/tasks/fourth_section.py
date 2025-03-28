@@ -8,9 +8,6 @@ import common.log.logging_handler as log
 class FourthSectionTask(AbstractTask):
     _TYPE = TaskType.SECTION_4
 
-    def __init__(self) -> None:
-        super().__init__("./data/fourth_section.yaml")
-
     def _run(self) -> None:
         elements = self._create_field_elements(FiniteFieldElement)
         log.elements(

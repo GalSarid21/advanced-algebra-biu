@@ -11,9 +11,6 @@ from typing import List
 class ThirdSectionTask(AbstractTask):
     _TYPE = TaskType.SECTION_3
 
-    def __init__(self) -> None:
-        super().__init__("./data/third_section.yaml")
-
     def _run(self) -> None:
         log.info("*** Testing FiniteFields Creation:")
         fields = self._create_fields()

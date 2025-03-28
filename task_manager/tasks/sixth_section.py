@@ -14,9 +14,6 @@ from typing import List
 class SixthSectionTask(AbstractTask):
     _TYPE = TaskType.SECTION_6
 
-    def __init__(self) -> None:
-        super().__init__("./data/sixth_section.yaml")
-
     def _run(self) -> None:
         exps = [i for i in range(-2, 3, 1)]
         
