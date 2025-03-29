@@ -20,7 +20,4 @@ if __name__ == "__main__":
         sys.exit(130)
 
     except Exception as e:
-        log.error(
-            f"Unexpected Error: {e}\n" +\
-            f"Stacktrace:\n{traceback.format_exc()}"
-        )
+        log.error(f"{e}\nStacktrace:\n{traceback.format_exc()}")

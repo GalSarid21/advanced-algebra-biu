@@ -1,11 +1,4 @@
-from task_manager.tasks import(
-    AbstractTask, ALL_TASKS,
-    SecondSectionTask,
-    ThirdSectionTask,
-    FourthSectionTask,
-    FifthSectionTask,
-    SixthSectionTask
-)
+from task_manager.tasks import AbstractTask, ALL_TASKS
 from common.entities import TaskType, TaskResult, TaskResultStatus
 
 import common.log.logging_handler as log

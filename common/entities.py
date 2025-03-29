@@ -32,6 +32,7 @@ class TaskType(Enum):
     SECTION_6 = "section-6"
     SECTION_7 = "section-7"
     SECTION_8 = "section-8"
+    SECTION_9 = "section-9"
 
 
 class TaskResultStatus(Enum):
