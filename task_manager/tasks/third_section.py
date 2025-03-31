@@ -32,12 +32,11 @@ class ThirdSectionTask(AbstractTask):
                 )
 
             except Exception as e:
-                err_msg = f"Error:\n{e}\n" \
-                    + f"(P={field['p']} | f(x)={field['fx']})"
-
-                if i != len(fields_data) - 1:
-                    err_msg += "\n"
-                log.error(err_msg)
+                end_with_new_line = i != len(fields_data) - 1
+                self._log_field_creation_error(
+                    field=field, e=e,
+                    end_with_new_line=end_with_new_line
+                )
 
         return fields
 
@@ -63,7 +62,7 @@ class ThirdSectionTask(AbstractTask):
                 log.info(log_msg)
 
             except Exception as e:
-                err_msg = f"Error:\n{e}\n" \
+                err_msg = f"{e}\n" \
                     + f"(a={element['a']} | P={element['p']} | " \
                     + f"f(x)={element['fx']})"
 
