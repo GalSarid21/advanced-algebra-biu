@@ -67,7 +67,7 @@ class PrimeFieldElement(AbstractFieldElement):
         try:
             return PrimeFieldElement(self._a + other.a, self._p)
         except Exception as e:
-            log.error(f"Error:\n{e}")
+            log.error(str(e))
 
     def __sub__(self, other: "PrimeFieldElement") -> Optional["PrimeFieldElement"]:
         self.type_check(other)
@@ -76,7 +76,7 @@ class PrimeFieldElement(AbstractFieldElement):
         try:
             return PrimeFieldElement(self._a - other.a, self._p)
         except Exception as e:
-            log.error(f"Error:\n{e}")   
+            log.error(str(e))   
 
     def __mul__(self, other: "PrimeFieldElement"):
         self.type_check(other)
@@ -85,7 +85,7 @@ class PrimeFieldElement(AbstractFieldElement):
         try:
             return PrimeFieldElement(self._a * other.a, self._p)
         except Exception as e:
-            log.error(f"Error:\n{e}")
+            log.error(str(e))
 
     def __truediv__(self, other: "PrimeFieldElement") -> Optional["PrimeFieldElement"]:
         self.type_check(other)
@@ -94,13 +94,13 @@ class PrimeFieldElement(AbstractFieldElement):
         try:
             return PrimeFieldElement(self._a / other.a, self._p)
         except Exception as e:
-            log.error(f"Error:\n{e}")
+            log.error(str(e))
     
     def __invert__(self) -> Optional["PrimeFieldElement"]:
         try:
             return PrimeFieldElement(self._a**-1, self._p)
         except Exception as e:
-            log.error(f"Error:\n{e}")
+            log.error(str(e))
 
     # we added equality check overload
     def __eq__(self, other: "PrimeFieldElement") -> bool:
@@ -122,22 +122,25 @@ class PrimeFieldElement(AbstractFieldElement):
         back to 1.
         """
         if self._a == 0:
-            log.error(
-                "Error: a is zero, not in the prime field"
-            )
+            log.error("a is zero, not in the prime field")
             return
-        else:
-            pow = 1
-            # self._a can be int or galois.FieldArray.
-            # if its a galois.FieldArray, a deepcopy is needed to 
-            # avoid changing self._a while searching the mul_order
-            result = (
-                self._a if isinstance(self._a, int)
-                else deepcopy(self._a)
-            )
 
-            while result != 1:
-                result = result*self._a
-                pow += 1
+        # self._a can be int or galois.FieldArray.
+        # if its a galois.FieldArray, a deepcopy is needed to 
+        # avoid changing self._a while searching the mul_order
+        result = (
+            self._a if isinstance(self._a, int)
+            else deepcopy(self._a)
+        )
 
-            return pow
+        max_order = self._p - 1
+        for pow in range(1, max_order + 1, 1):
+        # while result != 1:
+            if result == 1:
+                return pow
+            result = result*self._a
+
+        log.error(
+            "multiplicative order not found, " +
+            "possible issue with element or field properties."
+        )

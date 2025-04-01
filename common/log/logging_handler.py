@@ -14,10 +14,7 @@ def info(msg: str) -> None:
     logging.info(msg)
 
 def error(msg: str) -> None:
-    # practically, we don't have a difference between logging.info and
-    # logging.error, since we don't add log level to our log.
-    # being kept for readability and the best practice.
-    logging.error(msg)
+    logging.error(f"Error Message: {msg}")
 
 def task_start(class_name: str) -> None:
     logging.info(

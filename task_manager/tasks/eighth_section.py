@@ -4,7 +4,6 @@ from common.entities import TaskType
 from src.fields import FiniteField
 
 import common.log.logging_handler as log
-import common.consts as consts
 
 from typing import List, Dict, Union
 
@@ -34,12 +33,11 @@ class EighthSectionTask(AbstractTask):
                 )
 
             except Exception as e:
-                err_msg = f"Error:\n{e}\n" \
-                    + f"(P={field['p']} | f(x)={field['fx']})"
-
-                if i != len(fields_data) - 1:
-                    err_msg += "\n"
-                log.error(err_msg)
+                end_with_new_line = i != len(fields_data) - 1
+                self._log_field_creation_error(
+                    field=field, e=e,
+                    end_with_new_line=end_with_new_line
+                )
 
         return fields
 
@@ -50,11 +48,17 @@ class EighthSectionTask(AbstractTask):
 
         for i, field_data in enumerate(fields_data, 1):
             field = field_data["field"]
-            generator = find_generator(field)
+            generator = None
+            try:
+                generator = find_generator(field)
+            except Exception as e:
+                log.error(e)
 
-            log.info(
-                f"Generator for Field {i} " +
-                f"(p = {field.p} | fx = {field.fx}): {generator.a}\n" + 
-                f"Expected generator: {field_data['expected_generator']}"
-            )
+            msg = f"Generator for Field {i} "
+            if generator is not None:
+                msg += f"(p = {field.p} | fx = {field.fx}): {generator.a}\n"
+                msg += f"Expected generator: {field_data['expected_generator']}"
+            else:
+                msg += f"(p = {field.p} | fx = {field.fx}): None\n"
+            log.info(msg)
 

@@ -48,40 +48,77 @@ class AbstractFieldElement(ABC):
                 + f"expected {type(self)}, got {type(self).__name__}"
             raise TypeError(err_msg)
 
-    def exp_by_squaring(
-        self,
-        n: int
-    ) -> Optional["AbstractFieldElement"]:
+    def exp_by_squaring(self, n: int) -> Optional["AbstractFieldElement"]:
         """
-        Computes self^n using the Exponentiation by Squaring method iteratively.
-        This function efficiently calculates the power of field element using
-        a while loop.
+        Computes self^n using the Exponentiation by Squaring method iteratively.  
+        This function efficiently calculates the power of a field element using  
+        a loop-based approach.
 
-        - If n is negative, it computes the reciprocal (self^(-n)).
-        - Uses a loop to square the base and reduce the
-          exponent by half in each step (hence time complexity is O(log[n])).
+        - If n is negative, it computes the reciprocal (self^(-n)) at the end.
+        - Uses a loop to square the base and reduce the exponent by half in each step,  
+          achieving a time complexity of O(log(n)).
         - Multiplies the result only when n is odd.
+        - Uses bitwise operations to speedup calculations.
 
-        * If an error occured during calculation, for example - tryping to
-          calculate the exp of zero, the returned value will be None and
-          internal error will be printed.
+        * If an error occurs during calculation, such as attempting to compute  
+          the exponentiation of zero, the function returns None and logs an internal error.
         """
-        # creates a deepcopy of self value to not change it during calculation
+        # using deepcopy to ensure original object remains unchanged
         element = deepcopy(self)
-        if n < 0:
-            element = ~element
-            if element is None:
-                return
-            n = -n
-
-        # start with the identity element
         result = self.get_multiplicative_identity()
 
-        while n > 0:
-            # checks if n is odd
-            if n % 2 == 1:
-                result *= element
-            element *= element
-            n //= 2
+        if n == 0:
+            return result
 
-        return result
+        neg_exp = n < 0
+        if neg_exp:
+            n = -n
+
+        while n:
+            # odd checking (bitwise - checks if the LSB is set)
+            if n & 1:
+                result *= element
+            # square the base
+            element *= element
+            # bitwise right shift (faster than n //= 2)
+            n >>= 1
+        # if exponent was negative, retrurn the inverse
+        return ~result if neg_exp else result
+
+    # def exp_by_squaring(
+    #     self,
+    #     n: int
+    # ) -> Optional["AbstractFieldElement"]:
+    #     """
+    #     Computes self^n using the Exponentiation by Squaring method iteratively.
+    #     This function efficiently calculates the power of field element using
+    #     a while loop.
+
+    #     - If n is negative, it computes the reciprocal (self^(-n)).
+    #     - Uses a loop to square the base and reduce the
+    #       exponent by half in each step (hence time complexity is O(log[n])).
+    #     - Multiplies the result only when n is odd.
+
+    #     * If an error occured during calculation, for example - tryping to
+    #       calculate the exp of zero, the returned value will be None and
+    #       internal error will be printed.
+    #     """
+    #     # creates a deepcopy of self value to not change it during calculation
+    #     element = deepcopy(self)
+    #     if n < 0:
+    #         element = ~element
+    #         if element is None:
+    #             return
+    #         n = -n
+
+    #     # start with the identity element
+    #     result = self.get_multiplicative_identity()
+
+    #     while n > 0:
+    #         # checks if n is odd
+    #         if n % 2 == 1:
+    #             result *= element
+    #         element *= element
+    #         n //= 2
+
+    #     return result

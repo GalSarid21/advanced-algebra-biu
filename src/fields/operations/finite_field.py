@@ -1,6 +1,8 @@
 from src.field_elements import FiniteFieldElement
 from src.fields import FiniteField
 
+import common.log.logging_handler as log
+
 from itertools import product
 import numpy as np
 
@@ -19,7 +21,7 @@ def find_generator(field: FiniteField):
         if order is not None and order == field.p**field.n - 1:
             return finite_field_element
 
-    raise Exception(
-        "Error: failed to find generator for element: " +
+    log.error(
+        "failed to find generator for field: " +
         f"p = {field.p} | fx = {field.fx}"
     )

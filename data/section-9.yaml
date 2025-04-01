@@ -1,0 +1,56 @@
+fields:
+  - p: 3
+    fx: 
+      - 1
+      - 2
+      - 0
+      - 1
+  
+  - p: 47
+    fx: 
+      - 42
+      - 3
+      - 0
+      - 1
+
+h_vals:
+  e1:
+    - expected_log: 2
+      h:
+      - 0
+      - 2
+      - 1
+      gen:
+        - 0
+        - 0
+        - 2
+
+    - expected_log: 9
+      h:
+      - 2
+      - 1
+      - 2
+      gen:
+        - 0
+        - 0
+        - 2
+
+  e2:
+    - expected_log: None
+      h:
+      - 38
+      - 33
+      - 17
+      gen:
+        - 0
+        - 0
+        - 5
+    - expected_log: 44
+      h:
+      - 38
+      - 33
+      - 17
+      gen:
+        - 0
+        - 31
+        - 36

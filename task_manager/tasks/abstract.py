@@ -4,11 +4,12 @@ from src.field_elements import(
     FiniteFieldElement
 )
 from common.entities import TaskResult, TaskResultStatus, TaskType
+from src.fields import FiniteField
 
 import common.log.logging_handler as log
 import common.consts as consts
 
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List, Optional, Union
 from abc import ABC, abstractmethod
 
 import yaml
@@ -84,3 +85,22 @@ class AbstractTask(ABC):
             )
 
         return elements
+
+    def _log_field_creation_error(
+        self,
+        field: Union[Dict[str, Any], FiniteField],
+        e: Exception,
+        end_with_new_line: Optional[bool] = False
+    ) -> None:
+
+        if isinstance(field, FiniteField):
+            p = field.p
+            fx = field.fx
+        else:
+            p = field["p"]
+            fx = field["fx"]
+
+        err_msg = f"{e}\n(P={p} | f(x)={fx})"
+        if end_with_new_line is True:
+            err_msg += "\n"
+        log.error(err_msg)

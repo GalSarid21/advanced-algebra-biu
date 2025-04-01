@@ -160,7 +160,7 @@ class FiniteFieldElement(AbstractFieldElement):
             return FiniteFieldElement(result, self._p, self._fx)
 
         except Exception as e:
-            log.error(f"Error:\n{e}")
+            log.error(str(e))
 
     # we added equality check overload
     def __eq__(self, other: "FiniteFieldElement") -> bool:
@@ -180,7 +180,7 @@ class FiniteFieldElement(AbstractFieldElement):
 
         if self._p != other.p or self._n != other.n:
             raise ValueError(
-                f"Error:\nOperation '{opration}' is applicable only between " +
+                f"\nOperation '{opration}' is applicable only between " +
                 "elements of the same field.\n" +
                 f"self: P={self._p} n={self._n} | other: P={other.p} n={other.n}"
             )
@@ -235,7 +235,7 @@ class FiniteFieldElement(AbstractFieldElement):
         Uses fast exponentiation for efficiency.
         """
         if np.all(self._a == 0):
-            log.error("Error: a is zero, not in the prime field")
+            log.error("a is zero, not in the prime field")
             return
 
         max_order = self._p**self._n - 1
@@ -248,5 +248,7 @@ class FiniteFieldElement(AbstractFieldElement):
 
             result *= self
 
-        log.error("Error: Order computation exceeded expected limit")
-        return
+        log.error(
+            "multiplicative order not found, " +
+            "possible issue with element or field properties."
+        )
