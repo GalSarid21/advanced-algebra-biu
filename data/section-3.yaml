@@ -35,3 +35,33 @@ elements:
       - 1
       - 0
       - 3
+  - p: 47
+    # irreducible polynomial - 3x + 5 with invalid vector 'a'
+    fx:
+      - 5
+      - 3
+    a:
+      - 1
+      - 0
+      - 3
+  - p: 5
+    # irreducible polynomial - x^2 + 3x + 7
+    fx:
+      - 7
+      - 3
+      - 1
+    # 'a' will be changed after mod operation
+    a:
+      - 11
+      - 8
+  - p: 5
+    # irreducible polynomial - x^2 + 3x + 7
+    fx:
+      - 7
+      - 3
+      - 0
+      - 1
+    # 'a' will be padded
+    a:
+      - 11
+      - 8
