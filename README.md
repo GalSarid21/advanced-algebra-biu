@@ -12,7 +12,6 @@ A task manager orchestrates the execution of complex field operations, utilizing
 | ----------------- | -------------------------------------------------------------------- |
 | [field_elements](https://github.com/GalSarid21/advanced-algebra-biu/tree/main/src/field_elements/abstract_field_element.py) | Implements prime and finite field elements |
 | [fields](https://github.com/GalSarid21/advanced-algebra-biu/tree/main/src/fields/finite_field.py) | Defines and operates on finite fields |
-| [bsgs](https://github.com/GalSarid21/advanced-algebra-biu/tree/main/src/bsgs.py) | Implements the Baby-Step Giant-Step (BSGS) algorithm for discrete logarithms |
 | [task_manager](https://github.com/GalSarid21/advanced-algebra-biu/tree/main/task_manager/task_manager.py) | Manages and executes structured assignment sections (as tasks) |
 | [data](https://github.com/GalSarid21/advanced-algebra-biu/tree/main/data/second_section.yaml) |Stores configuration and parameters for task execution |
 | [common](https://github.com/GalSarid21/advanced-algebra-biu/tree/main/common/entities.py) | Contains shared utilities and logic used across modules |

@@ -1,6 +1,6 @@
 from task_manager.cli.env_args import read_cli_env_args
 from common.log.config import configure_log
-from task_manager import TaskManager
+from task_manager import task_manager
 
 import common.log.logging_handler as log
 
@@ -13,8 +13,7 @@ if __name__ == "__main__":
     try:
         configure_log()
         args = read_cli_env_args()
-        task_manager = TaskManager(args)
-        task_manager.run()
+        task_manager.run(args)
 
     except KeyboardInterrupt:
         sys.exit(130)

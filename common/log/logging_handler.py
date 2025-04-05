@@ -13,8 +13,10 @@ import numpy as np
 def info(msg: str) -> None:
     logging.info(msg)
 
+
 def error(msg: str) -> None:
     logging.error(f"Error Message: {msg}")
+
 
 def task_start(class_name: str) -> None:
     logging.info(
@@ -25,6 +27,7 @@ def task_start(class_name: str) -> None:
 
 def task_end() -> None:
     logging.info(consts.LOG_HEADER_SEPARATORS_LINE)
+
 
 def elements(
     elements: List[AbstractFieldElement],
@@ -50,6 +53,7 @@ def elements(
     if end_with_empty_line:
         logging.info("")
 
+
 def fields(
     fields: List[FiniteField],
     start_idx: Optional[int] = 1,
@@ -64,6 +68,7 @@ def fields(
 
     if end_with_empty_line:
         logging.info("")
+
 
 def two_elements_operation(
     element_pairs: List[Tuple[AbstractFieldElement, AbstractFieldElement]],
@@ -89,6 +94,7 @@ def two_elements_operation(
 
     if end_with_empty_line:
         logging.info("")
+
 
 def single_element_operation(
     elements: List[AbstractFieldElement],

@@ -1,5 +1,3 @@
-from src.field_elements import AbstractFieldElement
-
 from dataclasses import dataclass
 from typing import Optional
 from enum import Enum
@@ -33,6 +31,7 @@ class TaskType(Enum):
     SECTION_7 = "section-7"
     SECTION_8 = "section-8"
     SECTION_9 = "section-9"
+    SECTION_10 = "section-10"
 
 
 class TaskResultStatus(Enum):
