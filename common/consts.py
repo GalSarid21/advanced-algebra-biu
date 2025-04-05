@@ -31,3 +31,6 @@ INVALID_ENUM_CREATION_MSG = "Tried to create {obj} instance with invalid " \
     + "`prompting_mode` value: {arg}"
 
 TASK_DATA_FILE_PATH = "./data/{section}.yaml"
+
+DISCRETE_LOG_FAIL_MSG = "Failed to calculate discrete log for: " \
+    + "a = {a}, b = {b} in U_{p}^{s}, failed func: {func_name}"

@@ -1,0 +1,29 @@
+elements:
+  # Clean case for comparison
+  - p: 11
+    s: 2
+    x_target: 3
+    g_int: 2
+    fx:
+      - 1
+      - 0
+    description: "Clean case: g=2 (generator mod 11), x_target=3, expected matching output and faster lifting."
+
+  - p: 17
+    s: 2
+    x_target: 5
+    g_int: 3
+    fx:
+      - 1
+      - 0
+    description: "Clean case: g=3 (generator mod 17), x_target=5, expected matching output and faster lifting."
+
+  # BSGS and Lifting should give similar performance
+  - p: 5
+    s: 2
+    x_target: 3
+    g_int: 2
+    fx:
+      - 1
+      - 0
+    description: "Small modulus and simple generator; BSGS expected to be faster."

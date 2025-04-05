@@ -6,6 +6,7 @@ from .sixth_section import SixthSectionTask
 from .seventh_section import SeventhSectionTask
 from .eighth_section import EighthSectionTask
 from .ninth_section import NinthSectionTask
+from.tanth_section import TenthSectionTask
 from .abstract import AbstractTask
 
 ALL_TASKS = [
@@ -16,5 +17,6 @@ ALL_TASKS = [
     SixthSectionTask,
     SeventhSectionTask,
     EighthSectionTask,
-    NinthSectionTask
+    NinthSectionTask,
+    TenthSectionTask
 ]
