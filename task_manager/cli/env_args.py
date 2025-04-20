@@ -13,7 +13,8 @@ def read_cli_env_args() -> Namespace:
         help="target task to execute.",
         type=str,
         choices=[task.value for task in TaskType],
-        default=TaskType.RUN_ALL.value
+        # default=TaskType.RUN_ALL.value
+        default=TaskType.SECTION_10.value
     )
 
     args = parser.parse_args()

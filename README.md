@@ -12,7 +12,6 @@ A task manager orchestrates the execution of complex field operations, utilizing
 | ----------------- | -------------------------------------------------------------------- |
 | [field_elements](https://github.com/GalSarid21/advanced-algebra-biu/tree/main/src/field_elements/abstract_field_element.py) | Implements prime and finite field elements |
 | [fields](https://github.com/GalSarid21/advanced-algebra-biu/tree/main/src/fields/finite_field.py) | Defines and operates on finite fields |
-| [bsgs](https://github.com/GalSarid21/advanced-algebra-biu/tree/main/src/bsgs.py) | Implements the Baby-Step Giant-Step (BSGS) algorithm for discrete logarithms |
 | [task_manager](https://github.com/GalSarid21/advanced-algebra-biu/tree/main/task_manager/task_manager.py) | Manages and executes structured assignment sections (as tasks) |
 | [data](https://github.com/GalSarid21/advanced-algebra-biu/tree/main/data/second_section.yaml) |Stores configuration and parameters for task execution |
 | [common](https://github.com/GalSarid21/advanced-algebra-biu/tree/main/common/entities.py) | Contains shared utilities and logic used across modules |
@@ -76,7 +75,15 @@ python main.py --task section-2
 ```description
 -- task: An assignment section to run.
 * tasks: [
-    section-2: run the code relevant to section 2.
+    section-2: test `PrimeFieldElement` (creation + basic functionality).
+    section-3: test `FiniteField` and `FiniteFieldElement` (creation + field/field element connection).
+    section-4: test element's image calculation.
+    section-5: test `FiniteFieldElement` (`pretty_printing` + basic functionality).
+    section-6: test `exp_by_squaring` function (exponentiation by squaring algorithm implementation).
+    section-7: test `mul_order` function (calculating multiplicative order).
+    section-8: test `find_generator` function (finding a generator of a prime field).
+    section-9: test `discrete_log_bsgs` function (calculating a discrete log using the baby-step giant-step algorithm).
+    section-10: test `discrete_log_lifting` function (calculating discrete log over U_{p^s} and "lift" it to Z_{p}).
     run-all: run all the implemented sections.
 ]
 ```
